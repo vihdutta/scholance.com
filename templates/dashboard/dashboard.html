@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Scholance</title>
+</head>
+<body>
+    <section class="bg-main">
+    <header>
+        <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
+        <nav>
+            <ul class="nav_links">
+                <li><a href="dashboard">Dashboard</a></li>
+                <li><a href="projects">Projects</a></li>
+                <li><a class="cta" href="profile/user"><button>Profile</button></a></li>
+                <li><a class="cta" href="logout"><button>Logout</button></a></li>
+            </ul>
+        </nav> 
+    </header>
+
+    <section class="container rounded p-5">
+        <div class="row">
+            <div class="col-3">
+                <div class="col"><h1>Projects</h1></div>
+                <hr>
+                <div class="col"><h5>Your Active Projects:</h5></div>
+                {% if cprojects %} 
+                  {% for cproject in cprojects %}
+                  <div class="col">{{ cproject }}</div>
+                  {% endfor %}
+                  {% endif %}
+                  <br>
+                <div class="col"><h5>Joined Projects:</h5></div>
+                  {% if projects %}
+                    {% for project in projects %}
+                    <div class="col">{{ project }}</div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="col">No Accepted Project Jobs</div>
+                    {% endif %}
+
+                  <div class="col">{{statement}}</div>
+            </div>
+            <div class="col-7">
+                
+            </div>
+          </div>
+    </section>
+    <script defer src="main.js"></script>
+</section>
+</body>
+</html>
