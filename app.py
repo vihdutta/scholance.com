@@ -31,7 +31,7 @@ def login():
         user = users_db.find_one({"username":username})
 
         if not user:
-            flash("Invalid username or password", "error")
+            flash("Invalid username or password!", "error")
             return redirect(request.url)
         
         user_password = user["password"]
@@ -43,8 +43,8 @@ def login():
         
 
 
-        print("Incorrect Login")
-        return "<h1>Incorrect Login</h1>"
+        flash("Invalid username or password!", "error")
+        return redirect(url_for("login"))
     return render_template("login.html")
 
 
@@ -61,12 +61,22 @@ def dashboard():
         return redirect(url_for("login"))
     else:
         user_data = users_db.find_one({"username":session.get("username")})
-        owned_projects = user_data["owned_projects"]
-        joined_projects = user_data["joined_projects"]
+        owned_project_ids = user_data["owned_projects"]
+        joined_project_ids = user_data["joined_projects"]
+
+        owned_projects = []
+        joined_projects = []
+
+        for _id in owned_project_ids:
+            project = projects_db.find_one({"_id": _id})
+            owned_projects.append(project["name"])
+        for _id in joined_project_ids:
+            project = projects_db.find_one({"_id": _id})
+            joined_projects.append(project["name"])
 
         return render_template("dashboard/dashboard.html",
-                               joined_projects=joined_projects,
-                               owned_projects=owned_projects)
+                               owned_projects=owned_projects,
+                               joined_projects=joined_projects,)
 
 
 @app.route("/projects/post", methods=["POST", "GET"])
@@ -76,8 +86,6 @@ def postjob():
         return redirect(url_for("login"))
     else:
         if request.method == "POST":
-            project_url = request.form.get("project_name").lower()
-            project_url = project_url.replace(" ", "-")
             description = request.form.get("description")
 
             if request.form.get("payment"):
@@ -97,7 +105,6 @@ def postjob():
                     "preview": description[0: 425],
                     "description": description,
                     "payment": payment,
-                    "project_url": project_url,
                     "active": True}
             projects_db.insert_one(project)
 
@@ -118,15 +125,26 @@ def logout():
 def signup():
     if request.method == "POST":
         username = request.form.get("username")
+        email = request.form.get("email")
+        password = request.form.get("password")
 
-        user_in_database = users_db.find_one({"name":username})
-        if user_in_database is not None:
+        if username == "" or email == "" or password == "":
+            flash("Fill out all fields!", "error")
+            return redirect(url_for("signup"))
+
+        user_in_database = users_db.find_one({"username":username})
+        if user_in_database:
             flash("Username already exists!", "error")
             return redirect(url_for("signup"))
 
         full_name = request.form.get("full_name")
-        first_name = full_name.split(" ")[0]
-        last_name = full_name.split(" ")[1]
+
+        if len(full_name.split(" ")) == 2:
+            first_name = full_name.split(" ")[0]
+            last_name = full_name.split(" ")[1]
+        else:
+            first_name = full_name
+            last_name = ""
 
         new_user = {"_id":users_db.count_documents({}),
             "admin": False,
@@ -175,11 +193,15 @@ def bs_function():
     return redirect(url_for("logout"))
 
 
-@app.route("/projects/<project>")
-def project_page(project):
+@app.route("/projects/<project_id>")
+def project_page(project_id):
+    if project_id.isnumeric() == False:
+        flash("Invalid link!", "error")
+        return redirect(url_for("projects"))
+
     data = list(projects_db.find())
     for project_data in data:
-        if project_data["project_url"] == project:
+        if str(project_data["_id"]).zfill(7) == project_id:
             return render_template("/projects/project-page.html", project_data=project_data)
     return "<h1>Project Not Found!</h1>"
 

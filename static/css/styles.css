@@ -17,7 +17,7 @@ header {
     align-items: center;
     padding: 30px 10%;
     height: 10vh;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: white;
 }
 
 .standard-bg {
@@ -78,6 +78,84 @@ a, button {
 
 .logo {
     height: 200%;
+}
+
+.wrapper {
+    max-width: 750px;
+    margin: 150px auto;
+}
+
+.wrapper .search-input {
+    position: relative;
+    background: #FFFFFF;
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.1);
+}
+
+.search-input .input {
+    height: 60px;
+    width: 100%;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 0 60px 0 20px;
+    font-size: 24px;
+}
+
+.search-input input {
+    height:60px;
+    width: 100%;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 0 60px 0 20px;
+    font-size: 24px;
+    box-shadow: 0px 1px 5px rgba(0,0,0,0.1)
+}
+
+.search-input .icon {
+    height: 60px;
+    width: 60px;
+    line-height: 60px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-align: center;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: rgba(192, 128, 49, 0.1);
+}
+
+.search-input .autocom-box {
+    padding: 0px;
+    max-height: 300px;
+    overflow-y: auto;
+    pointer-events: none;
+}
+
+.search-input.active .autocom-box{
+    padding: 10px 8px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.autocom-box li {
+    list-style: none;
+    padding: 10px 12px;
+    width: 100%;
+    cursor: default;
+    border-radius: 3px;
+    display: none;
+    font-size: 20px;
+}
+
+.search-input.active .autocom-box li {
+    display: block;
+}
+
+.autocom-box li:hover {
+    background-color: rgba(0,0,0,0.05);
 }
 
 .nav_links {

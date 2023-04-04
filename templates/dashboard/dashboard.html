@@ -13,7 +13,7 @@
     <header>
         <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
         <nav>
-            <ul class="nav_links">
+            <ul class="nav_links mb-0">
                 <li><a href="dashboard">Dashboard</a></li>
                 <li><a href="projects">Projects</a></li>
                 <li><a class="cta" href="profile/user"><button>Profile</button></a></li>
@@ -27,22 +27,26 @@
             <div class="col-3">
                 <div class="col"><h1>Projects</h1></div>
                 <hr>
-                <div class="col"><h5>Your Active Projects:</h5></div>
+                <div class="col"><h5>Owned Projects</h5></div>
+                <br>
+                {% if owned_projects|length != 0 %}
+                  {% for project in owned_projects %}
+                  <div class="col">{{ project }}</div>
+                  <br>
+                  {% endfor %}
+                  {% else %}
+                  <div class="col">No Accepted Project Jobs</div>
+                  {% endif %}
+
+                <div class="col"><h5>Joined Projects</h5></div>
                 {% if joined_projects|length != 0 %} 
                   {% for project in joined_projects %}
-                  <div class="col">{{ cproject }}</div>
+                  <br>
+                  <div class="col">{{ project }}</div>
+                  <br>
                   {% endfor %}
                   {% endif %}
                   <br>
-                <div class="col"><h5>Joined Projects:</h5></div>
-                  {% if owned_projects|length != 0 %}
-                    {% for project in owned_projects %}
-                    <div class="col">{{ project }}</div>
-                    {% endfor %}
-                    {% else %}
-                    <div class="col">No Accepted Project Jobs</div>
-                    {% endif %}
-
                   <!-- <div class="col">{{statement}}</div> -->
             </div>
             <div class="col-7">

@@ -9,15 +9,20 @@
     <title>Scholance</title>
 </head>
 <body>
+    {% block content %} {% with messages =
+        get_flashed_messages(with_categories=true) %} {% for category, message in
+        messages %}
+        <div class="{{ category }}">{{ message }}</div>
+        {% endfor %} {% endwith %}
     <header>
         <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
         <nav>
-            <ul class="nav_links">
-                <li><a href="services">Services</a></li>
+            <ul class="nav_links mb-0">
+                <li><a href="dashboard">Dashboard</a></li>
                 <li><a href="projects">Projects</a></li>
-                <li><a href="about">About</a></li>
-                <li><a class="cta" href="login"><button>Login</button></a></li>
-                <li><a class="cta" href="signup"><button>Signup</button></a></li>
+                <li><a class="cta" href="projects/post"><button>Post Project</button></a></li>
+                <li><a class="cta" href="profile/user"><button>Profile</button></a></li>
+                <li><a class="cta" href="logout"><button>Logout</button></a></li>
             </ul>
         </nav> 
     </header>
@@ -29,9 +34,10 @@
                 <h5> {{ project.owner }} </h5>
                 <h6>{{ project.size }} {{ project.payment }}</h6> <br>
                 <p class="text-preview" maxlength="30">{{ project.preview }}</p> 
-                <a class="cta" href="/projects/{{project.project_url}}"><button>Apply</button></a>
+                <a class="cta" href="/projects/{{'%07d' | format(project._id|int)}}"><button>Apply</button></a>
             </div>
         {% endfor %}
-    </section>    
+    </section>  
+    {% endblock %}  
 </body>
 </html>
