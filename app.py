@@ -13,8 +13,15 @@ app = Flask(__name__)
 app.secret_key = "SECRET"
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def index():
+    if request.method == "POST" :
+        search_query = request.form.get('search')
+        if search_query:
+            return redirect(url_for("search", search_query=search_query))
+        else:
+            return redirect('/')
+        
     return render_template("index.html")
 
 
@@ -193,17 +200,21 @@ def bs_function():
     return redirect(url_for("logout"))
 
 
-@app.route("/projects/<project_id>")
-def project_page(project_id):
-    if project_id.isnumeric() == False:
-        flash("Invalid link!", "error")
-        return redirect(url_for("projects"))
+@app.route("/projects/<search_query>", methods=["GET"])
+def search(search_query):
+    return "<h1>" + search_query + "</h1>"
 
-    data = list(projects_db.find())
-    for project_data in data:
-        if str(project_data["_id"]).zfill(7) == project_id:
-            return render_template("/projects/project-page.html", project_data=project_data)
-    return "<h1>Project Not Found!</h1>"
+# @app.route("/projects/<project_id>")
+# def project_page(project_id):
+#     if project_id.isnumeric() == False:
+#         flash("Invalid link!", "error")
+#         return redirect(url_for("projects"))
+
+#     data = list(projects_db.find())
+#     for project_data in data:
+#         if str(project_data["_id"]).zfill(7) == project_id:
+#             return render_template("/projects/project-page.html", project_data=project_data)
+#     return "<h1>Project Not Found!</h1>"
 
 
 # @app.route("/projects/<project>/apply", methods=["POST", "GET"])
