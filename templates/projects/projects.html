@@ -13,11 +13,11 @@
         <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
         <nav>
             <ul class="nav_links">
-                <li><a href="dashboard">Dashboard</a></li>
+                <li><a href="services">Services</a></li>
                 <li><a href="projects">Projects</a></li>
-                <li><a class="cta" href="projects/post"><button>Add Project</button></a></li>
-                <li><a class="cta" href="profile/user"><button>Profile</button></a></li>
-                <li><a class="cta" href="logout"><button>Logout</button></a></li>
+                <li><a href="about">About</a></li>
+                <li><a class="cta" href="login"><button>Login</button></a></li>
+                <li><a class="cta" href="signup"><button>Signup</button></a></li>
             </ul>
         </nav> 
     </header>
@@ -25,11 +25,11 @@
     <section class="c g cgrid-auto">
         {% for project in data %}
             <div class="text-center gp">
-                <h4 class="project-title">{{ project.project_name }}</h4>
-                <h5> {{ project.info.customer }} </h5>
-                <h6>{{ project.info.size }} {{ project.info.payment }}</h6> <br>
-                <p class="text-preview" maxlength="30">{{ project.info.preview }}</p> 
-                <a class="cta" href="/projects/{{project.info.project_url}}"><button>Apply</button></a>
+                <h4 class="project-title">{{ project.name }}</h4>
+                <h5> {{ project.owner }} </h5>
+                <h6>{{ project.size }} {{ project.payment }}</h6> <br>
+                <p class="text-preview" maxlength="30">{{ project.preview }}</p> 
+                <a class="cta" href="/projects/{{project.project_url}}"><button>Apply</button></a>
             </div>
         {% endfor %}
     </section>    

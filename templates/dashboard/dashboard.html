@@ -9,7 +9,7 @@
     <title>Scholance</title>
 </head>
 <body>
-    <section class="bg-main">
+    <section class="standard-bg bg-main">
     <header>
         <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
         <nav>
@@ -28,22 +28,22 @@
                 <div class="col"><h1>Projects</h1></div>
                 <hr>
                 <div class="col"><h5>Your Active Projects:</h5></div>
-                {% if cprojects %} 
-                  {% for cproject in cprojects %}
+                {% if joined_projects|length != 0 %} 
+                  {% for project in joined_projects %}
                   <div class="col">{{ cproject }}</div>
                   {% endfor %}
                   {% endif %}
                   <br>
                 <div class="col"><h5>Joined Projects:</h5></div>
-                  {% if projects %}
-                    {% for project in projects %}
+                  {% if owned_projects|length != 0 %}
+                    {% for project in owned_projects %}
                     <div class="col">{{ project }}</div>
                     {% endfor %}
                     {% else %}
                     <div class="col">No Accepted Project Jobs</div>
                     {% endif %}
 
-                  <div class="col">{{statement}}</div>
+                  <!-- <div class="col">{{statement}}</div> -->
             </div>
             <div class="col-7">
                 

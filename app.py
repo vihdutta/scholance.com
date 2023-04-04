@@ -1,25 +1,20 @@
 from flask import (Flask, render_template, request,
                    redirect, session, flash, url_for)
-
+from datetime import datetime
+from hashlib import sha256
 from pymongo import MongoClient
-cluster = MongoClient("mongodb+srv://civichours:civichours@cluster0.ovv1ops.mongodb.net/?retryWrites=true&w=majority")
-db = cluster["test"]
-collection = db["test"]
+
+cluster = MongoClient("mongodb+srv://civichours:zTudxFA2GtQN8xP7@cluster0.ovv1ops.mongodb.net/?retryWrites=true&w=majority")
+db = cluster["main"]
+users_db = db["users"]
+projects_db = db["projects"]
 
 app = Flask(__name__)
 app.secret_key = "SECRET"
 
-user = None
-customer = None
-
 
 @app.route('/')
 def index():
-    if user is None:
-        exit
-    else:
-        if 'user' in session and session['user'] == user.username:
-            return redirect(url_for("dashboard"))
     return render_template("index.html")
 
 
@@ -33,23 +28,21 @@ def login():
         if username == "" or password == "":
             flash("Username or password field empty", "error")
             return redirect(request.url)
-        try:
-            collection.find_one({"name":username})
-        except Exception:
+        user = users_db.find_one({"username":username})
+
+        if not user:
             flash("Invalid username or password", "error")
             return redirect(request.url)
-        else:
-            result = collection.find_one({"name":username})
-            print(result)
+        
+        user_password = user["password"]
             
-        global user
-        global customer
-        if password == result['info']['password']:
-            # user = <user info>
-
-            session['user'] = user.username
+        if sha256(password.encode('utf-8')).hexdigest() == user_password:
+            session["username"] = user["username"]
 
             return redirect(url_for("dashboard"))
+        
+
+
         print("Incorrect Login")
         return "<h1>Incorrect Login</h1>"
     return render_template("login.html")
@@ -57,106 +50,63 @@ def login():
 
 @app.route("/projects_check")
 def projects_check():
-    table = 1 # get all projects data
-    items = table.scan()['Items']
-    from pprint import pprint
-    pprint(items)
-    return f"Projects: {items}"
+    projects_data = list(projects_db.find())
+    return f"Projects: {projects_data}"
 
 
 @app.route('/dashboard')
 def dashboard():
-    if user is None:
-        exit
+    if not session.get("username"):
+        flash("You are not logged in!", "error")
+        return redirect(url_for("login"))
     else:
-        if 'user' in session and session['user'] == user.username:
-            statement = ""
-            customer_projects = False
-            user_projects = False
-            try:
-                customer.projects
-            except Exception as e:
-                print(e)
-                statement += "Activate Customer Account "
-            else:
-                if not customer.projects:
-                    statement += "No Owned Projects "
-                else:
-                    customer_projects = True
-            try:
-                user.projects
-            except Exception as e:
-                print(e)
-                statement += "Activate Employee Account "
-            else:
-                if not user.projects:
-                    statement += "No projects"
-                else:
-                    user_projects = True
-            print("PRINTING CUSTOMER INFORMATION")
-            print(customer)
-            print(customer.username)
-            print(customer.email)
-            print(customer.password)
-            print(customer.business)
-            print(customer.projects)
-            print(customer.first_name)
-            print(customer.last_name)
-            print(customer.phone_number)
-            print("FINISHED PRINTING CUSTOMER INFORMATION")
+        user_data = users_db.find_one({"username":session.get("username")})
+        owned_projects = user_data["owned_projects"]
+        joined_projects = user_data["joined_projects"]
 
-            print(str(customer.projects) + "projects customer.info.projects")
-
-            if customer_projects and user_projects:
-                return render_template("dashboard/dashboard.html", projects=user.projects, cprojects=customer.projects)
-            elif customer_projects:
-                return render_template("dashboard/dashboard.html", cprojects=customer.projects)
-            elif user_projects:
-                return render_template("dashboard/dashboard.html", projects=user.projects)
-            else:
-                return render_template("dashboard/dashboard.html", statement=statement)
-
-    flash("You are not logged in!", "error")
-    return redirect(url_for("login"))
+        return render_template("dashboard/dashboard.html",
+                               joined_projects=joined_projects,
+                               owned_projects=owned_projects)
 
 
 @app.route("/projects/post", methods=["POST", "GET"])
 def postjob():
-    if customer is None:
-        flash("Need to Active Account", "error")
-        exit
+    if not session.get("username"):
+        flash("You are not logged in!", "error")
+        return redirect(url_for("login"))
     else:
-        if 'user' in session and session['user'] == customer.username:
-            if request.method == "POST":
-                project_url = request.form.get("project_name").lower()
-                project_url = project_url.replace(" ", "-")
-                description = request.form.get("description")
+        if request.method == "POST":
+            project_url = request.form.get("project_name").lower()
+            project_url = project_url.replace(" ", "-")
+            description = request.form.get("description")
 
-                if request.form.get("payment"):
-                    payment = "$" + request.form.get("payment")
-                else:
-                    payment = request.form.get("volunteer_hours") + " hrs"
-
-                project = models.Project(request.form.get("project_name"), request.form.get("size"), description[0:425],
-                                         description, customer,
-                                         payment, False, False, project_url)
-                print("about to put project into dynamo")
-                dynamo.put_project(project)
-                print("project into dynamo")
-                cust = dynamo.get_user(customer.username)['customer']['projects']
-                cust.append(request.form.get("project_name"))
-                dynamo.update_user(customer.username, "customer.projects", cust)
-                print(cust)
-                print("<-- Cust")
-                flash("project posted successfully!", "info")
-                return redirect(request.url)
+            if request.form.get("payment"):
+                payment = "$" + request.form.get("payment")
             else:
-                print("not a post method")
-        else:
-            flash("Not logged in!")
-            return redirect(url_for("login"))
-    return render_template("projects/post-project.html")
+                payment = request.form.get("volunteer_hours") + " hrs"
 
+            project_id = projects_db.count_documents({})
+
+            project = {"_id":project_id,
+                    "name": request.form.get("project_name"),
+                    "owner": session.get("username"),
+                    "joiners": [],
+                    "size": request.form.get("size"),
+                    "start":datetime.now().strftime("%m%d%Y"),
+                    "end":None,
+                    "preview": description[0: 425],
+                    "description": description,
+                    "payment": payment,
+                    "project_url": project_url,
+                    "active": True}
+            projects_db.insert_one(project)
+
+            users_db.update_one({"username":session.get("username")}, {"$push": {"owned_projects": project_id}})
+
+            flash("project posted successfully!", "info")
+            return redirect(request.url)
+        else:
+            return render_template("projects/post-project.html")
 
 @app.route('/logout')
 def logout():
@@ -167,18 +117,33 @@ def logout():
 @app.route('/signup', methods=["POST", "GET"])
 def signup():
     if request.method == "POST":
+        username = request.form.get("username")
+
+        user_in_database = users_db.find_one({"name":username})
+        if user_in_database is not None:
+            flash("Username already exists!", "error")
+            return redirect(url_for("signup"))
+
         full_name = request.form.get("full_name")
         first_name = full_name.split(" ")[0]
         last_name = full_name.split(" ")[1]
-        new_user = {'username': request.form.get("username"),
-                    'info': {'email': request.form.get("email"), 'password': request.form.get("password"),
-                             'first_name': first_name, 'last_name': last_name},
-                    'employee': {'level': None, 'school': None, 'teams': [], 'interests': [], 'skills': [],
-                                 'projects': []}, 'customer': {'business': None, 'projects': [], 'phone_number': None}}
-        if not dynamo.query_users(new_user['username']):
-            print(dynamo.put_user(new_user))
-            return redirect(url_for("login"))
-        return "<h1>Username Taken</h1>"
+
+        new_user = {"_id":users_db.count_documents({}),
+            "admin": False,
+            "username": request.form.get("username"),
+            "first_name":first_name,
+            "last_name":last_name,
+            "email": request.form.get("email"),
+            "zip": None,
+            "password":sha256(request.form.get("password").encode('utf-8')).hexdigest(),
+            "phone_number": None,
+            "owned_projects": [],
+            "joined_projects": []}
+
+        users_db.insert_one(new_user)
+
+        flash("Account successfully created!", "info")
+        return redirect(url_for("login"))
     return render_template("signup.html")
 
 
@@ -199,8 +164,9 @@ def password():
 
 @app.route("/projects")
 def projects():
-    table = dynamo.get_projects_table()
-    data = table.scan()['Items']
+    data = list(projects_db.find())
+    for project in data:
+        print(project)
     return render_template("projects/projects.html", data=data, data_length=len(data))
 
 
@@ -211,32 +177,30 @@ def bs_function():
 
 @app.route("/projects/<project>")
 def project_page(project):
-    table = dynamo.get_projects_table()
-    data = table.scan()['Items']
+    data = list(projects_db.find())
     for project_data in data:
-        if project_data["info"]["project_url"] == project:
+        if project_data["project_url"] == project:
             return render_template("/projects/project-page.html", project_data=project_data)
     return "<h1>Project Not Found!</h1>"
 
 
-@app.route("/projects/<project>/apply", methods=["POST", "GET"])
-def apply_for_project(project):
-    projects = dynamo.scan_projects("project_url")
-    print("Projects:")
-    for i, p in enumerate(projects):
-        p_url = projects[i]["info"]["project_url"]
-        if p_url == project:
-            pn = projects[i]["project_name"]
-            p = dynamo.get_project(pn)
-            print(p)
-            pa = p["info"]['applications']
-            pa.append(user.username)
-            dynamo.update_project(pn, "applications", pa)
-        else:
-            print("p_url != project")
-    return "<h1>Applied</h1>"
+# @app.route("/projects/<project>/apply", methods=["POST", "GET"])
+# def apply_for_project(project):
+#     projects = dynamo.scan_projects("project_url")
+#     print("Projects:")
+#     for i, p in enumerate(projects):
+#         p_url = projects[i]["info"]["project_url"]
+#         if p_url == project:
+#             pn = projects[i]["project_name"]
+#             p = dynamo.get_project(pn)
+#             print(p)
+#             pa = p["info"]['applications']
+#             pa.append(user.username)
+#             dynamo.update_project(pn, "applications", pa)
+#         else:
+#             print("p_url != project")
+#     return "<h1>Applied</h1>"
 
-    return "<h1>Project Not Found!</h1>"
 
 
 if __name__ == '__main__':

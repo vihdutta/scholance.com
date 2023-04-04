@@ -10,7 +10,6 @@
 }
 
 header {
-    position: fixed;
     top: 0;
     width: 100%;
     display: flex;
@@ -83,6 +82,7 @@ a, button {
 
 .nav_links {
     list-style: none;
+    margin: none !important;
 }
 
 .nav_links li {
