@@ -22,7 +22,7 @@ def index():
         else:
             return redirect('/')
         
-    return render_template("index.html")
+    return render_template("/index.html")
 
 
 @app.route('/login', methods=["POST", "GET"])
@@ -52,7 +52,7 @@ def login():
 
         flash("Invalid username or password!", "error")
         return redirect(url_for("login"))
-    return render_template("login.html")
+    return render_template("/login.html")
 
 
 @app.route("/projects_check")
@@ -81,7 +81,7 @@ def dashboard():
             project = projects_db.find_one({"_id": _id})
             joined_projects.append(project["name"])
 
-        return render_template("dashboard/dashboard.html",
+        return render_template("/dashboard/dashboard.html",
                                owned_projects=owned_projects,
                                joined_projects=joined_projects,)
 
@@ -120,7 +120,7 @@ def postjob():
             flash("project posted successfully!", "info")
             return redirect(request.url)
         else:
-            return render_template("projects/post-project.html")
+            return render_template("/projects/post-project.html")
 
 @app.route('/logout')
 def logout():
@@ -169,22 +169,22 @@ def signup():
 
         flash("Account successfully created!", "info")
         return redirect(url_for("login"))
-    return render_template("signup.html")
+    return render_template("/signup.html")
 
 
 @app.route('/profile/user')
 def user_profile():
-    return render_template("profile/user-profile.html")
+    return render_template("/profile/user-profile.html")
 
 
 @app.route('/profile/business')
 def business_profile():
-    return render_template("profile/business-profile.html")
+    return render_template("/profile/business-profile.html")
 
 
 @app.route('/profile/password')
 def password():
-    return render_template("profile/password.html")
+    return render_template("/profile/password.html")
 
 
 @app.route("/projects")
@@ -192,7 +192,7 @@ def projects():
     data = list(projects_db.find())
     for project in data:
         print(project)
-    return render_template("projects/projects.html", data=data, data_length=len(data))
+    return render_template("/projects/projects.html", data=data, data_length=len(data))
 
 
 @app.route("/projects/logout")
