@@ -264,29 +264,6 @@ input:focus, input:active, button:focus, button:active {
     from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));   
  }
 
- .c {
-	max-width: 1100px;
-	margin: 0 auto;
-	overflow: auto;
-	padding: 0 40px;
-	align-items: center;
-}
-
-.c-large {
-	max-width: 1500px;
-	margin: 0 auto;
-	overflow: auto;
-	padding: 0 40px;
-	align-items: center;
-}
-
-.g {
-	display: grid;
-	grid-template-columns: 300px;
-    max-width: 75%;
-	height: 100%;
-}
-
 .gp {
     background-color: rgba(202, 172, 123, 0.75);
     border-top: 0.5ch solid rgba(202, 172, 123, 1);
@@ -295,17 +272,33 @@ input:focus, input:active, button:focus, button:active {
     border-right: none;
     padding: 5%;
     margin: 5%;
-    width: 90%;
-    height: 90%;
     grid-column: 1/2;
 }
 
- .cgrid-auto {
-	align-items: center;
-	justify-items: center;
-	grid-template-columns: 1fr 2fr;
-    grid-template-rows: auto;
+.gp-pd {
+
 }
+
+.main-container {
+    width: 80%;
+    height: auto;
+    display: flex;
+    padding: 0 0 10% 10%;
+}
+
+.small-container {
+    height: 80vh;
+    overflow-y: scroll;
+    box-sizing: border-box;
+  }
+  
+  .small-container-1 {
+    width: 33.33%;
+  }
+  
+  .small-container-2 {
+    width: 66.67%;
+  }
 
 
 .project-title {

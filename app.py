@@ -35,16 +35,16 @@ def login():
         if username == "" or password == "":
             flash("Username or password field empty", "error")
             return redirect(request.url)
-        user = users_db.find_one({"username":username})
+        user_in_database = users_db.find_one({"username":username})
 
-        if not user:
+        if not user_in_database:
             flash("Invalid username or password!", "error")
             return redirect(request.url)
         
-        user_password = user["password"]
+        user_password = user_in_database["password"]
             
         if sha256(password.encode('utf-8')).hexdigest() == user_password:
-            session["username"] = user["username"]
+            session["username"] = user_in_database["username"]
 
             return redirect(url_for("dashboard"))
         
@@ -94,12 +94,9 @@ def postjob():
     else:
         if request.method == "POST":
             description = request.form.get("description")
-
-            if request.form.get("payment"):
-                payment = "$" + request.form.get("payment")
-            else:
-                payment = request.form.get("volunteer_hours") + " hrs"
-
+            payment = request.form.get("volunteer_hours") + " hrs"
+            tags = request.form.get("tags").split(",")
+            tags = [tag.strip() for tag in tags]
             project_id = projects_db.count_documents({})
 
             project = {"_id":project_id,
@@ -111,13 +108,21 @@ def postjob():
                     "end":None,
                     "preview": description[0: 425],
                     "description": description,
+                    "tags": tags,
                     "payment": payment,
                     "active": True}
-            projects_db.insert_one(project)
+            
+            user_in_database = users_db.find_one({"username":session.get("username")})
+            user_projects_len = len(user_in_database.get("owned_projects"))
 
-            users_db.update_one({"username":session.get("username")}, {"$push": {"owned_projects": project_id}})
+            if user_projects_len > 5:
+                flash("You already have 5 projects!", "error")
+                return redirect(request.url)
+            else:
+                projects_db.insert_one(project)
+                users_db.update_one({"username":session.get("username")}, {"$push": {"owned_projects": project_id}})
 
-            flash("project posted successfully!", "info")
+            flash("Project posted successfully!", "info")
             return redirect(request.url)
         else:
             return render_template("/projects/post-project.html")
@@ -193,11 +198,6 @@ def projects():
     for project in data:
         print(project)
     return render_template("/projects/projects.html", data=data, data_length=len(data))
-
-
-@app.route("/projects/logout")
-def bs_function():
-    return redirect(url_for("logout"))
 
 
 @app.route("/projects/<search_query>", methods=["GET"])

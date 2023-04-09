@@ -20,8 +20,8 @@
         <nav>
             <ul class="nav_links mb-0 scaleout">
                 <li><a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a></li>
-                <li><a href="dashboard">Dashboard</a></li>
-                <li><a href="projects">Projects</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/projects">Projects</a></li>
                 <li>    <section class="container mx-auto">
                     <form method="post">
                         <div class="search-input">
@@ -31,23 +31,44 @@
                         </div>
                     </form>
                 </section></li>
-                <li><a class="cta" href="projects/post"><button>Post Project</button></a></li>
-                <li><a class="cta" href="profile/user"><button>Profile</button></a></li>
-                <li><a class="cta" href="logout"><button>Logout</button></a></li>
+                <li><a class="cta" href="/projects/post"><button>Post Project</button></a></li>
+                <li><a class="cta" href="/profile/user"><button>Profile</button></a></li>
+                <li><a class="cta" href="/logout"><button>Logout</button></a></li>
             </ul>
         </nav> 
     </header>
 
-    <section class="c g cgrid-auto">
-        {% for project in data %}
-            <div class="text-center gp">
-                <h4 class="project-title">{{ project.name }}</h4>
-                <h5> {{ project.owner }} </h5>
-                <h6>{{ project.size }} {{ project.payment }}</h6> <br>
-                <p class="text-preview" maxlength="30">{{ project.preview }}</p> 
-                <a class="cta" href="/projects/{{'%07d' | format(project._id|int)}}"><button>Apply</button></a>
-            </div>
-        {% endfor %}
+    <section class="main-container">
+            <section class="small-container small-container-1">
+            {% for project in data %}
+                <div class="text-center gp">
+                    <h4 class="project-title">{{ project.name }}</h4>
+                    <h5> {{ project.owner }} </h5>
+                    <h6>{{ project.size }} {{ project.payment }}</h6> <br>
+                    <p class="text-preview" maxlength="30">{{ project.preview }}</p> 
+                    <a class="cta" href="/projects/{{'%07d' | format(project._id|int)}}"><button>Apply</button></a>
+                </div>
+            {% endfor %}
+            </section>
+            <section class="small-container small-container-2">
+        <div class="gp">
+            <h1>Project Name</h1>
+            <h1>Project Owner</h1>
+            <h1>Zip Code</h1>
+
+            <h2>Tags:</h2>
+            <ol>
+                <li>tag 1</li>
+                <li>tag 2</li>
+                <li>tag 3</li>
+                <li>tag 4</li>
+                <li>tag 5</li>
+            </ol>
+
+            <p>Job Description Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga esse saepe eaque velit possimus accusamus rerum, cumque facere consectetur, expedita adipisci iusto inventore. Officiis delectus necessitatibus tenetur. Distinctio est, earum itaque architecto quos eligendi ut eius exercitationem tenetur vero, cumque dolor, et enim illum molestiae. Libero veniam eos fugit enim nam iusto facere eius debitis ratione voluptates sequi laboriosam ex officiis, numquam vero. Reprehenderit laudantium quibusdam exercitationem perspiciatis voluptate nam perferendis! Reprehenderit ea blanditiis corporis suscipit deleniti repellat ex voluptates vel similique assumenda. Rem id vitae earum perspiciatis impedit quam. Voluptas ipsum harum voluptatem, perspiciatis deleniti eius assumenda facilis quod?</p>
+           
+        </div>
+    </section>
     </section>  
     {% endblock %}  
 

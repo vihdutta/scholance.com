@@ -35,8 +35,8 @@
                 <form method = "post">
 
                     <div class="form-outline mb-4">
-                        <label class="form-label" for="username">Project Name</label>
-                        <input placeholder="Name of project." name="project_name" type="username" id="username" class="form-control" />
+                        <label class="form-label" for="project_name">Project Name</label>
+                        <input placeholder="Name of project." name="project_name" type="project_name" id="project_name" class="form-control" />
                     </div>
 
                     <div class="form-outline mb-4">
@@ -49,19 +49,11 @@
                         <textarea placeholder="Size of the project. (Small, Medium, or Large)" name="size" type="size" id="size" class="form-control"></textarea>
                     </div>
 
-                    <select name="dropdown" id="dropdown">
-                        <option value="payment">Payment</option>
-                        <option value="volunteer_hours">Volunteer Hours</option>
-                    </select>
-                    <br><br>
-                    <label class="form-label" for="payment">Payment</label>
-                    <div class="form-outline input-group mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="dollar-addon">$</span>
-                        </div>
-                        
-                        <input placeholder="Write how much the project will pay." type="payment" name="payment" id="payment" class="form-control" aria-describedby="dollar-addon" />
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="tags">Tags</label>
+                        <textarea placeholder="Write comma seperated tags that your service falls under (up to 10)" name="tags" type="tags" id="tags" class="form-control"></textarea>
                     </div>
+                    
                     <label class="form-label" for="volunteer_hours">Volunteer Hours</label>
                     <div class="form-outline input-group mb-4">
                         <input placeholder="Write approximately how many volunteer hours will be received during the duration of the project." type="volunteer_hours" name="volunteer_hours" id="volunteer_hours" class="form-control" />
