@@ -27,7 +27,8 @@ def index():
 
 @app.route('/login', methods=["POST", "GET"])
 def login():
-    print("Logging In")
+    if session.get("username"):
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -129,7 +130,7 @@ def postjob():
 
 @app.route('/logout')
 def logout():
-    session.pop("user")
+    session.pop("username")
     return redirect(url_for("index"))
 
 
