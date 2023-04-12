@@ -196,6 +196,7 @@ def password():
 @app.route("/projects")
 def projects():
     data = list(projects_db.find())
+    print(data)
     for project in data:
         print(project)
     return render_template("/projects/projects.html", data=data, data_length=len(data))

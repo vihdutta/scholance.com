@@ -60,10 +60,46 @@
 
             <p id="description"></p>
         </div>
-    </section>
+    </section> 
     </section>  
     {% endblock %}  
 
-    <script defer src="../static/javascript/projects.js"></script>
+    {% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let data = {{ data|tojson|safe }};
+            
+            for (let i = 0; i < data.length; i++) {
+                let projectId = data[i]._id.toString().padStart(7, "0");
+                let projectElement = document.getElementById(projectId);
+                
+                projectElement.addEventListener('click', function() {
+                    // Project display section elements
+                    var displayProjectTitleElement = document.getElementById("project-title");
+                    var displayProjectOwnerElement = document.getElementById("project-owner");
+                    var displayZipCodeElement = document.getElementById("zip-code");
+                    var displayTagsElement = document.getElementById("tags");
+                    var displayDescriptionElement = document.getElementById("description");
+
+                    //Specific project clicked elements
+                    var projectTitleElement = projectElement.querySelector(".project-title");
+                    var projectOwnerElement = projectElement.querySelector("h5");
+                    var projectSizeElement = projectElement.querySelector("h6:nth-child(1)");
+                    var projectPaymentElement = projectElement.querySelector("h6:nth-child(2)");
+                    var textPreviewElement = projectElement.querySelector(".text-preview");
+
+                    // Modifying the content of the selected elements
+                    displayProjectTitleElement.textContent = projectTitleElement.textContent;
+                    displayProjectOwnerElement.textContent = projectOwnerElement.textContent;
+                    displayZipCodeElement.textContent = zipCodeElement.textContent;
+                    displayTagsElement.textContent = tagsElement.textContent;
+                    displayDescriptionElement.textContent = descriptionElement.textContent;
+                });
+            }
+        });
+    </script>
+
+
+    {% endblock %}
 </body>
 </html>

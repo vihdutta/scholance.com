@@ -145,7 +145,16 @@ inputBox.onkeyup = (e) => {
 function select(element) {
     let selectUserInput = element.textContent;
     inputBox.value = selectUserInput;
-} 
+
+    // Trigger an "Enter" key press event
+    var event = new Event('keydown');
+    event.keyCode = 13; // Enter key code
+    event.which = 13; // Enter key code
+    event.key = 'Enter'; // Enter key label
+    event.code = 'Enter'; // Enter key label
+    inputBox.dispatchEvent(event);
+}
+
 
 function showSuggestions(list) {
     let listData;
@@ -156,4 +165,41 @@ function showSuggestions(list) {
         listData = list.join("");
     }
     suggestionBox.innerHTML = listData;
+}
+
+
+const tagInput = document.getElementById('tag-input');
+const tagsContainer = document.getElementById('tags-container');
+
+tagInput.addEventListener('keydown', (event) => {
+  if (event.key === ',' || event.key === 'Enter') {
+    event.preventDefault();
+    const tagText = tagInput.value.trim();
+    if (tagText) {
+      createTag(tagText);
+      tagInput.value = '';
+    }
+  }
+});
+
+function createTag(tagText) {
+    if (tagsContainer.childElementCount < 10) {
+
+  const tag = document.createElement('div');
+  tag.classList.add('tag');
+
+  const tagLabel = document.createElement('div');
+  tagLabel.classList.add('tag-label');
+  tagLabel.textContent = tagText;
+  tag.appendChild(tagLabel);
+
+  const tagRemove = document.createElement('div');
+  tagRemove.classList.add('tag-remove');
+  tagRemove.textContent = 'x';
+  tagRemove.addEventListener('click', () => {
+    tag.remove();
+  });
+  tag.appendChild(tagRemove);
+  tagsContainer.appendChild(tag);
+}
 }

@@ -275,10 +275,6 @@ input:focus, input:active, button:focus, button:active {
     grid-column: 1/2;
 }
 
-.gp-pd {
-
-}
-
 .main-container {
     height: auto;
     display: flex;

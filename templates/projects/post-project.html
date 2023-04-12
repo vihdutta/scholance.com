@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/tags.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script defer src="../static/javascript/disable_box.js"></script>
     <title>Scholance</title>
@@ -32,7 +33,7 @@
         <div class="row text-center">
             <div class="" >
                 <h3 class="m-4">Post Project</h3>
-                <form method = "post">
+                <form method = "POST" onkeydown="return event.key != 'Enter';">
 
                     <div class="form-outline mb-4">
                         <label class="form-label" for="project_name">Project Name</label>
@@ -51,7 +52,12 @@
 
                     <div class="form-outline mb-4">
                         <label class="form-label" for="tags">Tags</label>
-                        <textarea placeholder="Write comma seperated tags that your service falls under (up to 10)" name="tags" type="tags" id="tags" class="form-control"></textarea>
+                        <div class="tags" id="search-input">
+                            <input type="text" class="form-control" id="tag-input" placeholder="Add tags; press enter for each.">
+                            <div id="autocom-box"></div>
+                        </div>
+
+                        <div class="tags-container" id="tags-container"></div>
                     </div>
                     
                     <label class="form-label" for="volunteer_hours">Volunteer Hours</label>
@@ -67,9 +73,9 @@
                     </div>
                 </form>
 
-                <section id="items">
-
-                </section>
+                <section id="items"></section>
+  
+                <script defer src="../static/javascript/tags.js"></script>    
             </div>
         </div>
     </div>
