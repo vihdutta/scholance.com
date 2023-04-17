@@ -24,6 +24,9 @@ def index():
         
     return render_template("/index.html")
 
+@app.route("/recruit")
+def recruite():
+    return render_template("/recruit.html")
 
 @app.route('/login', methods=["POST", "GET"])
 def login():
@@ -46,10 +49,7 @@ def login():
             
         if sha256(password.encode('utf-8')).hexdigest() == user_password:
             session["username"] = user_in_database["username"]
-
             return redirect(url_for("dashboard"))
-        
-
 
         flash("Invalid username or password!", "error")
         return redirect(url_for("login"))
@@ -95,10 +95,15 @@ def postjob():
     else:
         if request.method == "POST":
             description = request.form.get("description")
-            payment = request.form.get("volunteer_hours") + " hrs"
-            tags = request.form.get("tags").split(",")
-            tags = [tag.strip() for tag in tags]
+            goals = request.form.get("goals")
+            time_commitment = request.form.get("time_commitment")
+            expectations = request.form.get("expectations")
+            tags = request.form.get("tags")
+            if tags != None:
+                tags = request.form.get("tags").split(",")
+                tags = [tag.strip() for tag in tags]
             project_id = projects_db.count_documents({})
+            print(tags)
 
             project = {"_id":project_id,
                     "name": request.form.get("project_name"),
@@ -106,11 +111,11 @@ def postjob():
                     "joiners": [],
                     "size": request.form.get("size"),
                     "start":datetime.now().strftime("%m%d%Y"),
-                    "end":None,
-                    "preview": description[0: 425],
+                    "goals": goals,
+                    "time_commitment": time_commitment,
+                    "expectations": expectations,
                     "description": description,
                     "tags": tags,
-                    "payment": payment,
                     "active": True}
             
             user_in_database = users_db.find_one({"username":session.get("username")})

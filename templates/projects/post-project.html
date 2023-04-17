@@ -37,17 +37,27 @@
 
                     <div class="form-outline mb-4">
                         <label class="form-label" for="project_name">Project Name</label>
-                        <input placeholder="Name of project." name="project_name" type="project_name" id="project_name" class="form-control" />
+                        <input placeholder="Name of project." name="project_name" id="project_name" class="form-control" />
                     </div>
 
                     <div class="form-outline mb-4">
                         <label class="form-label" for="description">General Description</label>
-                        <textarea placeholder="Write a description up to 300 characters. Make the first words count, they'll be shown first on the projects page!" name="description" type="description" id="description" class="form-control"></textarea>
+                        <textarea placeholder="Describe the project." name="description" type="description" id="description" class="form-control"></textarea>
                     </div>
 
                     <div class="form-outline mb-4">
-                        <label class="form-label" for="size">Project Size</label>
-                        <textarea placeholder="Size of the project. (Small, Medium, or Large)" name="size" type="size" id="size" class="form-control"></textarea>
+                        <label class="form-label" for="goals">Goals and Objectives</label>
+                        <textarea placeholder="Describe the goals and objectives of the project" name="goals"  id="goals" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="time_commitment">Time Commitment</label>
+                        <textarea placeholder="Describe the time commitment of the project" name="time_commitment"  id="time_commitment" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="expectations">Expectations</label>
+                        <textarea placeholder="Describe the expectations of the project" name="expectations"  id="expectations" class="form-control"></textarea>
                     </div>
 
                     <div class="form-outline mb-4">
@@ -60,19 +70,12 @@
                         <div class="tags-container" id="tags-container"></div>
                     </div>
                     
-                    <label class="form-label" for="volunteer_hours">Volunteer Hours</label>
-                    <div class="form-outline input-group mb-4">
-                        <input placeholder="Write approximately how many volunteer hours will be received during the duration of the project." type="volunteer_hours" name="volunteer_hours" id="volunteer_hours" class="form-control" />
-                        <div class="input-group-append">
-                            <span class="input-group-text">hrs</span>
-                          </div>
-                    </div>
-
                     <div class="text-center pt-1 pb-1">
                       <button id="project_button" class="fa-lg mb-3" type="update" formmethod="post">Post Project</button>
                     </div>
+                    
                 </form>
-
+<button id="pbt" class="fa-lg mb-3">TEST</button>
                 <section id="items"></section>
   
                 <script defer src="../static/javascript/tags.js"></script>    

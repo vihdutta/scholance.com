@@ -73,6 +73,22 @@ tagInput.addEventListener('keydown', (event) => {
   }
 });
 
+const projectButton = document.getElementById("pbt")
+const projectTags = document.getElementsByClassName("tag-label")
+
+projectButton.addEventListener("click", () => {
+    var tags = []; // Array to store the text values
+
+    // Loop through the object collection and retrieve the text content of each object
+    for (var i = 0; i < projectTags.length; i++) {
+        tags.push(projectTags[i].textContent); // Add the text content to the array
+    }
+    
+    var tags = tags.join(', '); // Join the array elements with commas
+    tagInput.textContent = tags;    
+    console.log("done");
+})
+
 function createTag(tagText) {
     if (tagsContainer.childElementCount < 10) {
 
