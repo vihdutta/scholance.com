@@ -1,0 +1,6 @@
+certifi==2022.9.24
+dynamo==0.1.1
+Flask==2.2.2
+multipledispatch==0.6.0
+pymongo==4.3.3
+gunicorn==19.1.1
