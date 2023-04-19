@@ -33,8 +33,15 @@
                     </form>
                 </section></li>
                 <li><a class="cta" href="/projects/post"><button>Post Project</button></a></li>
-                <li><a class="cta" href="/profile/user"><button>Profile</button></a></li>
-                <li><a class="cta" href="/logout"><button>Logout</button></a></li>
+                <li>                <div class="dropdown">
+                    <button class="dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                      {{ session["username"]}}
+                    </button>
+                    <ul class="dropdown-menu fade" aria-labelledby="profileDropdown">
+                      <li><a class="dropdown-item" href="/profile/user">Profile</a></li>
+                      <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                  </div></li>
             </ul>
         </nav> 
     </header>
