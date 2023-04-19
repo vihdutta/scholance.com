@@ -25,9 +25,13 @@ def index():
         
     return render_template("/index.html")
 
-@app.route("/recruit")
-def recruite():
-    return render_template("/recruit.html")
+@app.route("/about")
+def about():
+    return render_template("/about.html")
+
+@app.route("/organizations")
+def organizations():
+    return render_template("/organizations.html")
 
 @app.route('/login', methods=["POST", "GET"])
 def login():
@@ -253,4 +257,4 @@ def search(search_query):
 
 
 if __name__ == '__main__':
-    app.run() #debug=True, port=6969
+    app.run(debug=True, port=6969) #debug=True, port=6969
