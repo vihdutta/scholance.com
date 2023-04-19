@@ -2,7 +2,7 @@ header {
     width: 100%;
     display: flex;
     justify-content: center; /* Change from 'space-between' to 'center' */
-    height: 10vh;
+    height: 15vh;
     background-color: white;
     justify-items: center;
     align-items: center;
@@ -17,9 +17,6 @@ nav {
     justify-content: center; /* Change from 'space-between' to 'center' */
 }
 
-ul {
-    padding: 0 100px 0 100px !important;
-}
 
 .index-header {
     position: fixed;
@@ -34,9 +31,9 @@ ul {
     display: inline-block !important;
 }
 
-.nav_links li a img {
+/* .nav_links li a img {
     padding: 5px 100px !important;
-}
+} */
 
 .nav_links li a {
     transition: all 0.3s ease 0s !important;

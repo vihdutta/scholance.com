@@ -26,7 +26,7 @@
                 <li>    <section class="container mx-auto">
                     <form method="post">
                         <div class="search-input">
-                            <input type="text" name="search" placeholder="Find a community service project today">
+                            <input type="text" name="search" placeholder="Find a project ">
                             <button type="submit" value="submit" class="icon"><i class="bi bi-search"></i></button>
                             <div class="autocom-box"></div>
                         </div>
@@ -54,11 +54,15 @@
             <section class="small-container small-container-2">
                 <div class="gp">
                     <h1 id="project-title">Project Name</h1>
-                    <h1 id="project-owner">Project Owner</h1>
-                    <h1 id="zip-code">Zip Code</h1>
-
-                    <h2 id="tags">Tags:</h2>
-
+                    <h2 id="project-owner">Project Owner</h2>
+                    <h4 id="tags">Tags:</h4>
+                    <br>
+                    <h3 id="goals-and-objectives">Goals and Objectives</h3>
+                    <br>
+                    <h3 id="time-commitment">Time Commitment</h3>
+                    <br>
+                    <h3 id="expectations">Expectations</h3>
+                    
                     <p id="description"></p>
                 </div>
         </section> 
@@ -68,37 +72,41 @@
     {% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let data = {{ data|tojson|safe }};
-            
-            for (let i = 0; i < data.length; i++) {
-                let projectId = data[i]._id.toString().padStart(7, "0");
-                let projectElement = document.getElementById(projectId);
-                
-                projectElement.addEventListener('click', function() {
-                    // Project display section elements
-                    var displayProjectTitleElement = document.getElementById("project-title");
-                    var displayProjectOwnerElement = document.getElementById("project-owner");
-                    var displayZipCodeElement = document.getElementById("zip-code");
-                    var displayTagsElement = document.getElementById("tags");
-                    var displayDescriptionElement = document.getElementById("description");
+          let data = {{ data|tojson|safe }};
+    
+          for (let i = 0; i < data.length; i++) {
+            let projectId = data[i]._id.toString().padStart(7, "0");
+            let projectElement = document.getElementById(projectId);
 
-                    //Specific project clicked elements
-                    var projectTitleElement = projectElement.querySelector(".project-title");
-                    var projectOwnerElement = projectElement.querySelector("h5");
-                    var projectSizeElement = projectElement.querySelector("h6:nth-child(1)");
-                    var projectPaymentElement = projectElement.querySelector("h6:nth-child(2)");
-                    var textPreviewElement = projectElement.querySelector(".text-preview");
+            projectElement.addEventListener('click', function() {
+                // Project display section elements
+                var displayProjectTitleElement = document.getElementById("project-title");
+                var displayProjectOwnerElement = document.getElementById("project-owner");
+                var displayGoalsObjectivesElement = document.getElementById("goals-and-objectives");
+                var displayTimeCommitmentElement = document.getElementById("time-commitment");
+                var displayExpectationsElement = document.getElementById("expectations");
+                var displayTagsElement = document.getElementById("tags");
+                var displayDescriptionElement = document.getElementById("description");
 
-                    // Modifying the content of the selected elements
-                    displayProjectTitleElement.textContent = projectTitleElement.textContent;
-                    displayProjectOwnerElement.textContent = projectOwnerElement.textContent;
-                    displayZipCodeElement.textContent = zipCodeElement.textContent;
-                    displayTagsElement.textContent = tagsElement.textContent;
-                    displayDescriptionElement.textContent = descriptionElement.textContent;
-                });
-            }
-        });
-    </script>
+                // Specific project clicked elements
+                var projectTitleElement = projectElement.querySelector(".project-title");
+                var projectOwnerElement = projectElement.querySelector("h5");
+                var projectSizeElement = projectElement.querySelector("h6:nth-child(1)");
+                var projectPaymentElement = projectElement.querySelector("h6:nth-child(2)");
+                var textPreviewElement = projectElement.querySelector(".text-preview");
+
+                // Modifying the content of the selected elements
+                displayProjectTitleElement.textContent = projectTitleElement.textContent;
+                displayProjectOwnerElement.textContent = projectOwnerElement.textContent;
+                displayGoalsObjectivesElement.textContent = "Goals and Objectives: " + data[i].goals;
+                displayTimeCommitmentElement.textContent = "Time Commitment: " + data[i].time_commitment;
+                displayExpectationsElement.textContent = "Expectations: " + data[i].expectations;
+                displayTagsElement.textContent = "Tags: " + data[i].tags.join(", ");
+                displayDescriptionElement.textContent = data[i].description;
+            });
+        }
+    });
+      </script>
 
 
     {% endblock %}

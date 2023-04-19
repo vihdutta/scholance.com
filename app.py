@@ -3,8 +3,9 @@ from flask import (Flask, render_template, request,
 from datetime import datetime
 from hashlib import sha256
 from pymongo import MongoClient
+import certifi
 
-cluster = MongoClient("mongodb+srv://civichours:zTudxFA2GtQN8xP7@cluster0.ovv1ops.mongodb.net/?retryWrites=true&w=majority")
+cluster = MongoClient("mongodb+srv://civichours:zTudxFA2GtQN8xP7@cluster0.ovv1ops.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
 db = cluster["main"]
 users_db = db["users"]
 projects_db = db["projects"]
@@ -68,19 +69,27 @@ def dashboard():
         flash("You are not logged in!", "error")
         return redirect(url_for("login"))
     else:
+        import time
+        t_before_1 = time.perf_counter()
         user_data = users_db.find_one({"username":session.get("username")})
         owned_project_ids = user_data["owned_projects"]
         joined_project_ids = user_data["joined_projects"]
+        t_before_2 = time.perf_counter()
+
+        print(f"first: {t_before_2 - t_before_1}")
 
         owned_projects = []
         joined_projects = []
 
+        t_before_3 = time.perf_counter()
         for _id in owned_project_ids:
             project = projects_db.find_one({"_id": _id})
-            owned_projects.append(project["name"])
+            #owned_projects.append(project["name"])
         for _id in joined_project_ids:
             project = projects_db.find_one({"_id": _id})
             joined_projects.append(project["name"])
+        t_before_4 = time.perf_counter()
+        print(f"Time taken: {t_before_4 - t_before_3}")
 
         return render_template("/dashboard/dashboard.html",
                                owned_projects=owned_projects,
