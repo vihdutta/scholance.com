@@ -299,6 +299,10 @@ img {
     grid-column: 1/2;
 }
 
+.gp-project:hover {
+    box-shadow: 0px 1px 3px 3px var(--color-shadow);
+}
+
 .main-container {    
     height: auto;
     display: flex;

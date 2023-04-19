@@ -73,7 +73,7 @@ tagInput.addEventListener('keydown', (event) => {
   }
 });
 
-const projectButton = document.getElementById("pbt")
+const projectButton = document.getElementById("project_button")
 const projectTags = document.getElementsByClassName("tag-label")
 
 projectButton.addEventListener("click", () => {
@@ -85,7 +85,7 @@ projectButton.addEventListener("click", () => {
     }
     
     var tags = tags.join(', '); // Join the array elements with commas
-    tagInput.textContent = tags;    
+    tagInput.value = tags;    
     console.log("done");
 })
 

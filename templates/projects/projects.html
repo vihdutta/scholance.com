@@ -42,7 +42,7 @@
     <section class="main-container">
             <section class="small-container small-container-1">
             {% for project in data %}
-                <div class="text-center gp" id="{{'%07d' | format(project._id|int)}}">
+                <div class="text-center gp gp-project" id="{{'%07d' | format(project._id|int)}}">
                     <h4 class="project-title">{{ project.name }}</h4>
                     <h5> {{ project.owner }} </h5>
                     <h6>{{ project.size }} {{ project.payment }}</h6> <br>
