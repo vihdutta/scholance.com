@@ -5,9 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/navbar.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/footer.css">
     <link rel="stylesheet" type="text/css" href="/static/css/tags.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script defer src="../static/javascript/disable_box.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
     <title>Scholance</title>
 </head>
 <body>
@@ -17,17 +18,28 @@
         <div class="{{ category }}">{{ message }}</div>
         {% endfor %} {% endwith %}
         
-    <header>
-        <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
-        <nav>
-            <ul class="nav_links mb-0">
-                <li><a href="/dashboard">Dashboard</a></li>
-                <li><a href="/projects">Projects</a></li>
-                <li><a class="cta" href="/profile/user"><button>Profile</button></a></li>
-                <li><a class="cta" href="/logout"><button>Logout</button></a></li>
-            </ul>
-        </nav> 
-    </header>
+        <header>
+            <nav>
+                <ul class="nav_links mb-0">
+                    <li><a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a></li>
+                </ul>
+                <ul class="nav_links mb-0">
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/projects">Projects</a></li>
+                </ul>
+                <ul class="nav_links mb-0">
+                      <div class="dropdown">
+                        <button class="dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                          {{ session["username"]}}
+                        </button>
+                        <ul class="dropdown-menu fade" aria-labelledby="profileDropdown">
+                          <li><a class="dropdown-item" href="/profile/user">Profile</a></li>
+                          <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        </ul>
+                      </div>
+                </ul>
+            </nav> 
+        </header>
 
     <div class="container profile-main-bg">
         <div class="row text-center">
@@ -77,11 +89,47 @@
                 </form>
                 <section id="items"></section>
   
-                <script defer src="../static/javascript/tags.js"></script>   
+                <script defer src="../static/javascript/tags.js"></script> 
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>  
                  
             </div>
         </div>
     </div>
     {% endblock %}
+
+    <footer>
+        <div class="container-sm text-center pt-5">
+            <!-- Logo and homepage link -->
+            <div class="row mt-3">
+                <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
+            </div>
+
+            <!-- Links to about, projects, and organizations/post section -->
+            <div class="row mt-3">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="about.html" class="text-white">About</a></li>
+                    <li><a href="projects.html" class="text-white">Projects</a></li>
+                    <li><a href="organizations.html" class="text-white">organizations/Post</a></li>
+                </ul>
+            </div>
+
+            <!-- Terms and conditions section -->
+            <div class="row mt-3">
+                <h5>Terms &amp; Conditions</h5>
+                <ul class="list-unstyled">
+                    <li><a href="terms.html" class="text-white">Terms of Service</a></li>
+                    <li><a href="privacy.html" class="text-white">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Copyright section -->
+            <hr>
+            <div class="row mt-3">
+                <p class="text-lg-right">&copy; 2023 Scholance. All rights reserved.</p>
+            </div>
+
+        </div>
+    </footer>
 </body>
 </html>

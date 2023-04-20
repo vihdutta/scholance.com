@@ -87,11 +87,13 @@ def dashboard():
 
         t_before_3 = time.perf_counter()
         for _id in owned_project_ids:
-            project = projects_db.find_one({"_id": _id})
-            #owned_projects.append(project["name"])
+            owned_project = projects_db.find_one({"_id": _id})
+            if owned_project:
+                owned_projects.append(owned_project["name"])
         for _id in joined_project_ids:
-            project = projects_db.find_one({"_id": _id})
-            joined_projects.append(project["name"])
+            joined_project = projects_db.find_one({"_id": _id})
+            if joined_project:
+                joined_projects.append(joined_project["name"])
         t_before_4 = time.perf_counter()
         print(f"Time taken: {t_before_4 - t_before_3}")
 
@@ -121,7 +123,8 @@ def postjob():
             project = {"_id":project_id,
                     "name": request.form.get("project_name"),
                     "owner": session.get("username"),
-                    "joiners": [],
+                    "volunteers": [],
+                    "applications": [],
                     "size": request.form.get("size"),
                     "start":datetime.now().strftime("%m%d%Y"),
                     "goals": goals,
@@ -154,6 +157,8 @@ def logout():
 
 @app.route('/signup', methods=["POST", "GET"])
 def signup():
+    if session.get("username"):
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         username = request.form.get("username")
         email = request.form.get("email")
@@ -198,6 +203,28 @@ def signup():
 
 @app.route('/profile/user')
 def user_profile():
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    username = request.form['username']
+    email = request.form['email']
+    school = request.form['school']
+
+    # Check if any fields are empty
+    update_dict = {}
+    if first_name:
+        update_dict['first_name'] = first_name
+    if last_name:
+        update_dict['last_name'] = last_name
+    if username:
+        update_dict['username'] = username
+    if email:
+        update_dict['email'] = email
+    if school:
+        update_dict['school'] = school
+
+    # Update the user in the database
+    user_id = request.form['user_id'] # Assuming the user ID is also submitted through the form
+    users_db.update_one({'_id': user_id}, {'$set': update_dict})
     return render_template("/profile/user-profile.html")
 
 
