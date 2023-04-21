@@ -17,7 +17,6 @@
         messages %}
         <div class="{{ category }}">{{ message }}</div>
         {% endfor %} {% endwith %}
-
     <header class="index-header">
         <nav>
             <ul class="nav_links mb-0">
@@ -55,7 +54,7 @@
                     <h5> {{ project.owner }} </h5>
                     <h6>{{ project.size }} {{ project.payment }}</h6> <br>
                     <p class="text-preview" maxlength="30">{{ project.preview }}</p> 
-                    <a class="cta" href="/projects/{{'%07d' | format(project._id|int)}}"><button>Apply</button></a>
+                    <a class="cta" href="/projects/apply/{{'%07d' | format(project._id|int)}}"><button>Apply</button></a>
                 </div>
             {% endfor %}
             </section>

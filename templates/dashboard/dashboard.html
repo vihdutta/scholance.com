@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,99 +11,118 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
     <title>Scholance</title>
 </head>
+
 <body>
     <section class="standard-bg bg-main">
-    <header class="index-header">
-      <nav>
-          <ul class="nav_links mb-0">
-              <li><a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a></li>
-          </ul>
-          <ul class="nav_links mb-0">
-              <li><a href="/dashboard">Dashboard</a></li>
-              <li><a href="/projects">Projects</a></li>
-          </ul>
-          <ul class="nav_links mb-0">
-                <div class="dropdown">
-                  <button class="dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ session["username"]}}
-                  </button>
-                  <ul class="dropdown-menu fade" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="/profile/user">Profile</a></li>
-                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                  </ul>
+        <header class="index-header">
+            <nav>
+                <ul class="nav_links mb-0">
+                    <li><a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a></li>
+                </ul>
+                <ul class="nav_links mb-0">
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/projects">Projects</a></li>
+                </ul>
+                <ul class="nav_links mb-0">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            {{ session["username"]}}
+                        </button>
+                        <ul class="dropdown-menu fade" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="/profile/user">Profile</a></li>
+                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </ul>
+            </nav>
+        </header>
+        <div class="spacer"></div>
+        <section class="container rounded p-5">
+            <div class="row">
+                <div class="col-3">
+                    <div class="col">
+                        <h1>Projects</h1>
+                    </div>
+                    <hr>
+                    <div class="col">
+                        <h5>Owned Projects</h5>
+                    </div>
+                    <br>
+                    {% if owned_projects|length != 0 %}
+                    {% for project in owned_projects %}
+                    <div class="col">{{ project }}</div>
+                    <br>
+                    {% endfor %}
+                    {% endif %}
+
+                    <div class="col">
+                        <h5>Joined Projects</h5>
+                    </div>
+                    {% if joined_projects|length != 0 %}
+                    {% for project in joined_projects %}
+                    <br>
+                    <div class="col">{{ project }}</div>
+                    <br>
+                    {% endfor %}
+                    {% endif %}
+                    <br>
+
+                    <div class="col">
+                        <h5>Your Applications</h5>
+                    </div>
+                    {% if applied_projects|length != 0 %}
+                    {% for project in applied_projects %}
+                    <br>
+                    <div class="col">{{ project }}</div>
+                    <br>
+                    {% endfor %}
+                    {% endif %}
+                    <br>
+                    <!-- <div class="col">{{statement}}</div> -->
                 </div>
-          </ul>
-      </nav> 
-  </header>
-  <div class="spacer"></div>
-    <section class="container rounded p-5">
-        <div class="row">
-            <div class="col-3">
-                <div class="col"><h1>Projects</h1></div>
+                <div class="col-7">
+
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container-sm text-center pt-5">
+                <!-- Logo and homepage link -->
+                <div class="row mt-3">
+                    <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
+                </div>
+
+                <!-- Links to about, projects, and organizations/post section -->
+                <div class="row mt-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="about.html" class="text-white">About</a></li>
+                        <li><a href="projects.html" class="text-white">Projects</a></li>
+                        <li><a href="organizations.html" class="text-white">organizations/Post</a></li>
+                    </ul>
+                </div>
+
+                <!-- Terms and conditions section -->
+                <div class="row mt-3">
+                    <h5>Terms &amp; Conditions</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="terms.html" class="text-white">Terms of Service</a></li>
+                        <li><a href="privacy.html" class="text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Copyright section -->
                 <hr>
-                <div class="col"><h5>Owned Projects</h5></div>
-                <br>
-                {% if owned_projects|length != 0 %}
-                  {% for project in owned_projects %}
-                  <div class="col">{{ project }}</div>
-                  <br>
-                  {% endfor %}
-                  {% else %}
-                  <div class="col">No Accepted Project Jobs</div>
-                  {% endif %}
+                <div class="row mt-3">
+                    <p class="text-lg-right">&copy; 2023 Scholance. All rights reserved.</p>
+                </div>
 
-                <div class="col"><h5>Joined Projects</h5></div>
-                {% if joined_projects|length != 0 %} 
-                  {% for project in joined_projects %}
-                  <br>
-                  <div class="col">{{ project }}</div>
-                  <br>
-                  {% endfor %}
-                  {% endif %}
-                  <br>
-                  <!-- <div class="col">{{statement}}</div> -->
             </div>
-            <div class="col-7">
-                
-            </div>
-          </div>
+        </footer>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
     </section>
-
-    <footer>
-      <div class="container-sm text-center pt-5">
-          <!-- Logo and homepage link -->
-          <div class="row mt-3">
-              <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
-          </div>
-
-          <!-- Links to about, projects, and organizations/post section -->
-          <div class="row mt-3">
-              <h5>Quick Links</h5>
-              <ul class="list-unstyled">
-                  <li><a href="about.html" class="text-white">About</a></li>
-                  <li><a href="projects.html" class="text-white">Projects</a></li>
-                  <li><a href="organizations.html" class="text-white">organizations/Post</a></li>
-              </ul>
-          </div>
-
-          <!-- Terms and conditions section -->
-          <div class="row mt-3">
-              <h5>Terms &amp; Conditions</h5>
-              <ul class="list-unstyled">
-                  <li><a href="terms.html" class="text-white">Terms of Service</a></li>
-                  <li><a href="privacy.html" class="text-white">Privacy Policy</a></li>
-              </ul>
-          </div>
-
-          <!-- Copyright section -->
-          <hr>
-          <div class="row mt-3">
-              <p class="text-lg-right">&copy; 2023 Scholance. All rights reserved.</p>
-          </div>
-
-      </div>
-  </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
-</section>
 </body>
+
 </html>

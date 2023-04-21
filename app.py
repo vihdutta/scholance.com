@@ -73,19 +73,15 @@ def dashboard():
         flash("You are not logged in!", "error")
         return redirect(url_for("login"))
     else:
-        import time
-        t_before_1 = time.perf_counter()
-        user_data = users_db.find_one({"username":session.get("username")})
+        user_data = users_db.find_one({"username":session["username"]})
         owned_project_ids = user_data["owned_projects"]
         joined_project_ids = user_data["joined_projects"]
-        t_before_2 = time.perf_counter()
-
-        print(f"first: {t_before_2 - t_before_1}")
+        applied_projects_ids = user_data["applied_projects"]
 
         owned_projects = []
         joined_projects = []
+        applied_projects = []
 
-        t_before_3 = time.perf_counter()
         for _id in owned_project_ids:
             owned_project = projects_db.find_one({"_id": _id})
             if owned_project:
@@ -94,12 +90,15 @@ def dashboard():
             joined_project = projects_db.find_one({"_id": _id})
             if joined_project:
                 joined_projects.append(joined_project["name"])
-        t_before_4 = time.perf_counter()
-        print(f"Time taken: {t_before_4 - t_before_3}")
+        for _id in applied_projects_ids:
+            applied_project = projects_db.find_one({"_id": _id})
+            if applied_project:
+                applied_projects.append(applied_project["name"])
 
         return render_template("/dashboard/dashboard.html",
                                owned_projects=owned_projects,
-                               joined_projects=joined_projects,)
+                               joined_projects=joined_projects,
+                               applied_projects=applied_projects)
 
 
 @app.route("/projects/post", methods=["POST", "GET"])
@@ -118,7 +117,6 @@ def postjob():
                 tags = request.form.get("tags").split(",")
                 tags = [tag.strip() for tag in tags]
             project_id = projects_db.count_documents({})
-            print(tags)
 
             project = {"_id":project_id,
                     "name": request.form.get("project_name"),
@@ -192,7 +190,8 @@ def signup():
             "password":sha256(request.form.get("password").encode('utf-8')).hexdigest(),
             "phone_number": None,
             "owned_projects": [],
-            "joined_projects": []}
+            "joined_projects": [],
+            "applied_projects": []}
 
         users_db.insert_one(new_user)
 
@@ -222,9 +221,7 @@ def user_profile():
     if school:
         update_dict['school'] = school
 
-    # Update the user in the database
-    user_id = request.form['user_id'] # Assuming the user ID is also submitted through the form
-    users_db.update_one({'_id': user_id}, {'$set': update_dict})
+    users_db.update_one({'username': session["username"]}, {'$set': update_dict})
     return render_template("/profile/user-profile.html")
 
 
@@ -241,16 +238,35 @@ def password():
 @app.route("/projects")
 def projects():
     data = list(projects_db.find())
-    print(data)
-    for project in data:
-        print(project)
     return render_template("/projects/projects.html", data=data, data_length=len(data))
 
 
-@app.route("/projects/<search_query>", methods=["GET"])
-def search(search_query):
-    return "<h1>" + search_query + "</h1>"
+@app.route("/projects/apply/<padded_id>", methods=["GET"])
+def apply(padded_id):
+    project_id = padded_id.lstrip("0")
+    if project_id == "":
+        project_id = "0"
 
+    if project_id.isnumeric():
+        project = projects_db.find_one({"_id": int(project_id)})
+        project_owner = project.get("owner")
+        project_volunteers = project.get("volunteers")
+        project_applications = project.get("applications")
+        print(session["username"])
+        print(project_owner)
+        print(project_volunteers)
+        print(project_applications)
+        if session["username"] != project_owner and session["username"] not in project_volunteers and session["username"] not in project_applications:
+                users_db.update_one({"username": session["username"]}, {'$push': {"applied_projects": int(project_id)}})
+                projects_db.update_one({"_id": int(project_id)}, {'$push': {"applications": session["username"]}})
+                print(f"{session['username']} + {project_owner} + {project_volunteers} + {project_applications}")
+        else:
+            flash(f"{session['username']} + {project_owner} + {project_volunteers} + {project_applications}", "error")
+            return redirect(url_for("projects"))
+    else:
+        flash("Request error. Please try again later.", "error")
+        return redirect(url_for("projects"))
+    return redirect(url_for("dashboard"))
 # @app.route("/projects/<project_id>")
 # def project_page(project_id):
 #     if project_id.isnumeric() == False:
