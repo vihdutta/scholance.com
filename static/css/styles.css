@@ -290,6 +290,10 @@ img {
     from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));   
  }
 
+ .full-size-button {
+    width: 100%;
+ }
+
 .gp {
     background-color: var(--color-primary-light);
     border-radius: 5px;

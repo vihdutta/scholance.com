@@ -1,4 +1,4 @@
-from flask import (Flask, render_template, request,
+from flask import (Flask, jsonify, render_template, request,
                    redirect, session, flash, url_for)
 from datetime import datetime
 from hashlib import sha256
@@ -73,27 +73,7 @@ def dashboard():
         flash("You are not logged in!", "error")
         return redirect(url_for("login"))
     else:
-        user_data = users_db.find_one({"username":session["username"]})
-        owned_project_ids = user_data["owned_projects"]
-        joined_project_ids = user_data["joined_projects"]
-        applied_projects_ids = user_data["applied_projects"]
-
-        owned_projects = []
-        joined_projects = []
-        applied_projects = []
-
-        for _id in owned_project_ids:
-            owned_project = projects_db.find_one({"_id": _id})
-            if owned_project:
-                owned_projects.append(owned_project["name"])
-        for _id in joined_project_ids:
-            joined_project = projects_db.find_one({"_id": _id})
-            if joined_project:
-                joined_projects.append(joined_project["name"])
-        for _id in applied_projects_ids:
-            applied_project = projects_db.find_one({"_id": _id})
-            if applied_project:
-                applied_projects.append(applied_project["name"])
+        owned_projects, joined_projects, applied_projects = user_project_data()
 
         return render_template("/dashboard/dashboard.html",
                                owned_projects=owned_projects,
@@ -267,6 +247,71 @@ def apply(padded_id):
         flash("Request error. Please try again later.", "error")
         return redirect(url_for("projects"))
     return redirect(url_for("dashboard"))
+
+@app.route("/api/project-category-request/<project_category>", methods=["GET"])
+def project_data_request(project_category):
+    owned_projects, joined_projects, applied_projects = user_project_data()
+    if project_category == "owned-projects":
+        return jsonify(owned_projects)
+    if project_category == "joined-projects":
+        return jsonify(joined_projects)
+    if project_category == "applied-projects":
+        return jsonify(applied_projects)
+    return "ERROR 404: NO DATA FOUND"
+
+@app.route("/api/project-delete/<padded_id>", methods=["GET"])
+def project_delete(padded_id):
+    print("hello")
+    project_id = padded_id.lstrip("0")
+    if project_id == "":
+        project_id = "0"
+    project_id = int(project_id)
+
+    projects_db.find_one_and_delete({"_id":project_id})
+
+    users_db.update_many(
+        {
+            "$or": [
+                {"owned_projects": project_id},
+                {"joined_projects": project_id},
+                {"applied_projects": project_id}
+            ]
+        },
+        {
+            "$pull": {
+                "owned_projects": project_id,
+                "joined_projects": project_id,
+                "applied_projects": project_id
+            }
+        }
+    )
+    return jsonify("COMPLETE")
+
+def user_project_data():
+    user_data = users_db.find_one({"username":session["username"]})
+    owned_project_ids = user_data["owned_projects"]
+    joined_project_ids = user_data["joined_projects"]
+    applied_projects_ids = user_data["applied_projects"]
+
+    owned_projects = []
+    joined_projects = []
+    applied_projects = []
+
+    for _id in owned_project_ids:
+        owned_project = projects_db.find_one({"_id": _id})
+        if owned_project:
+            owned_projects.append(owned_project)
+    for _id in joined_project_ids:
+        joined_project = projects_db.find_one({"_id": _id})
+        if joined_project:
+            joined_projects.append(joined_project)
+    for _id in applied_projects_ids:
+        applied_project = projects_db.find_one({"_id": _id})
+        if applied_project:
+            applied_projects.append(applied_project)
+
+    return owned_projects, joined_projects, applied_projects
+
 # @app.route("/projects/<project_id>")
 # def project_page(project_id):
 #     if project_id.isnumeric() == False:

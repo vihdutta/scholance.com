@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
     <link rel="stylesheet" type="text/css" href="/static/css/navbar.css">
     <link rel="stylesheet" type="text/css" href="/static/css/footer.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
     <title>Scholance</title>
 </head>
@@ -40,50 +41,35 @@
         <div class="spacer"></div>
         <section class="container rounded p-5">
             <div class="row">
+                <h1>Dashboard</h1>
                 <div class="col-3">
-                    <div class="col">
-                        <h1>Projects</h1>
-                    </div>
                     <hr>
-                    <div class="col">
-                        <h5>Owned Projects</h5>
+                    <div class="col m-2">
+                        <button id="owned-projects" class="ajax">Owned Projects</button>
                     </div>
-                    <br>
-                    {% if owned_projects|length != 0 %}
-                    {% for project in owned_projects %}
-                    <div class="col">{{ project }}</div>
-                    <br>
-                    {% endfor %}
-                    {% endif %}
 
-                    <div class="col">
-                        <h5>Joined Projects</h5>
+                    <div class="col m-2">
+                        <button id="joined-projects" class="ajax">Joined Projects</button>
                     </div>
-                    {% if joined_projects|length != 0 %}
-                    {% for project in joined_projects %}
-                    <br>
-                    <div class="col">{{ project }}</div>
-                    <br>
-                    {% endfor %}
-                    {% endif %}
-                    <br>
 
-                    <div class="col">
-                        <h5>Your Applications</h5>
+                    <div class="col m-2">
+                        <button id="applied-projects" class="ajax">Your Applications</button>
                     </div>
-                    {% if applied_projects|length != 0 %}
-                    {% for project in applied_projects %}
-                    <br>
-                    <div class="col">{{ project }}</div>
-                    <br>
-                    {% endfor %}
-                    {% endif %}
+                    
                     <br>
                     <!-- <div class="col">{{statement}}</div> -->
                 </div>
-                <div class="col-7">
-
+                <div id="projects-container" class="col-7 gp">
+                    <button class="full-size-button" type="button" data-toggle="collapse" data-target="#more-info" aria-expanded="false"
+                        aria-controls="more-info">
+                        More Info
+                    </button>
+                    <div class="collapse" id="more-info">
+                        <h5>Project Name</h5>
+                        <p></p>
+                    </div>
                 </div>
+
             </div>
         </section>
 
@@ -121,6 +107,9 @@
 
             </div>
         </footer>
+        <script defer src="../static/javascript/dashboard.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
     </section>
 </body>
