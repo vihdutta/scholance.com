@@ -49,12 +49,12 @@
     <section class="main-container">
             <section class="small-container small-container-1">
             {% for project in data %}
-                <div class="text-center gp gp-project" id="{{'%07d' | format(project._id|int)}}">
+                <div class="text-center gp gp-project" id="{{project._id['$oid']}}">
                     <h4 class="project-title">{{ project.name }}</h4>
                     <h5> {{ project.owner }} </h5>
                     <h6>{{ project.size }} {{ project.payment }}</h6> <br>
                     <p class="text-preview" maxlength="30">{{ project.preview }}</p> 
-                    <a class="cta" href="/projects/apply/{{'%07d' | format(project._id|int)}}"><button>Apply</button></a>
+                    <a class="cta" href="/projects/apply/{{project._id['$oid']}}"><button>Apply</button></a>
                 </div>
             {% endfor %}
             </section>
@@ -82,8 +82,8 @@
           let data = {{ data|tojson|safe }};
     
           for (let i = 0; i < data.length; i++) {
-            let projectId = data[i]._id.toString().padStart(7, "0");
-            let projectElement = document.getElementById(projectId);
+            let projectElement = document.getElementById(data[i]._id['$oid']);
+            console.log(data[i]._id['$oid'])
 
             projectElement.addEventListener('click', function() {
                 // Project display section elements

@@ -3,6 +3,8 @@ from flask import (Flask, jsonify, render_template, request,
 from datetime import datetime
 from hashlib import sha256
 from pymongo import MongoClient
+from bson import ObjectId, json_util
+import json
 import certifi
 
 cluster = MongoClient("mongodb+srv://civichours:zTudxFA2GtQN8xP7@cluster0.ovv1ops.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
@@ -96,7 +98,7 @@ def postjob():
             if tags != None:
                 tags = request.form.get("tags").split(",")
                 tags = [tag.strip() for tag in tags]
-            project_id = projects_db.count_documents({})
+            project_id = ObjectId()
 
             project = {"_id":project_id,
                     "name": request.form.get("project_name"),
@@ -115,7 +117,7 @@ def postjob():
             user_in_database = users_db.find_one({"username":session.get("username")})
             user_projects_len = len(user_in_database.get("owned_projects"))
 
-            if user_projects_len > 5:
+            if user_projects_len > 4:
                 flash("You already have 5 projects!", "error")
                 return redirect(request.url)
             else:
@@ -160,7 +162,7 @@ def signup():
             first_name = full_name
             last_name = ""
 
-        new_user = {"_id":users_db.count_documents({}),
+        new_user = {"_id": ObjectId(),
             "admin": False,
             "username": request.form.get("username"),
             "first_name":first_name,
@@ -218,33 +220,26 @@ def password():
 @app.route("/projects")
 def projects():
     data = list(projects_db.find())
-    return render_template("/projects/projects.html", data=data, data_length=len(data))
+    return render_template("/projects/projects.html", data=json.loads(json_util.dumps(data)), data_length=len(data))
 
 
-@app.route("/projects/apply/<padded_id>", methods=["GET"])
-def apply(padded_id):
-    project_id = padded_id.lstrip("0")
-    if project_id == "":
-        project_id = "0"
+@app.route("/projects/apply/<project_id>", methods=["GET"])
+def apply(project_id):
 
-    if project_id.isnumeric():
-        project = projects_db.find_one({"_id": int(project_id)})
-        project_owner = project.get("owner")
-        project_volunteers = project.get("volunteers")
-        project_applications = project.get("applications")
-        print(session["username"])
-        print(project_owner)
-        print(project_volunteers)
-        print(project_applications)
-        if session["username"] != project_owner and session["username"] not in project_volunteers and session["username"] not in project_applications:
-                users_db.update_one({"username": session["username"]}, {'$push': {"applied_projects": int(project_id)}})
-                projects_db.update_one({"_id": int(project_id)}, {'$push': {"applications": session["username"]}})
-                print(f"{session['username']} + {project_owner} + {project_volunteers} + {project_applications}")
-        else:
-            flash(f"{session['username']} + {project_owner} + {project_volunteers} + {project_applications}", "error")
-            return redirect(url_for("projects"))
+    project = projects_db.find_one({"_id": ObjectId(project_id)})
+    project_owner = project.get("owner")
+    project_volunteers = project.get("volunteers")
+    project_applications = project.get("applications")
+    print(session["username"])
+    print(project_owner)
+    print(project_volunteers)
+    print(project_applications)
+    if session["username"] != project_owner and session["username"] not in project_volunteers and session["username"] not in project_applications:
+            users_db.update_one({"username": session["username"]}, {'$push': {"applied_projects": ObjectId(project_id)}})
+            projects_db.update_one({"_id": ObjectId(project_id)}, {'$push': {"applications": session["username"]}})
+            print(f"{session['username']} + {project_owner} + {project_volunteers} + {project_applications}")
     else:
-        flash("Request error. Please try again later.", "error")
+        flash(f"{session['username']} + {project_owner} + {project_volunteers} + {project_applications}", "error")
         return redirect(url_for("projects"))
     return redirect(url_for("dashboard"))
 
@@ -252,36 +247,31 @@ def apply(padded_id):
 def project_data_request(project_category):
     owned_projects, joined_projects, applied_projects = user_project_data()
     if project_category == "owned-projects":
-        return jsonify(owned_projects)
+        return json.loads(json_util.dumps(owned_projects))
     if project_category == "joined-projects":
-        return jsonify(joined_projects)
+        return json.loads(json_util.dumps(joined_projects))
     if project_category == "applied-projects":
-        return jsonify(applied_projects)
+        return json.loads(json_util.dumps(applied_projects))
     return "ERROR 404: NO DATA FOUND"
 
-@app.route("/api/project-delete/<padded_id>", methods=["GET"])
-def project_delete(padded_id):
-    print("hello")
-    project_id = padded_id.lstrip("0")
-    if project_id == "":
-        project_id = "0"
-    project_id = int(project_id)
+@app.route("/api/project-delete/<project_id>", methods=["GET"])
+def project_delete(project_id):
 
-    projects_db.find_one_and_delete({"_id":project_id})
+    projects_db.find_one_and_delete({"_id":ObjectId(project_id)})
 
     users_db.update_many(
         {
             "$or": [
-                {"owned_projects": project_id},
-                {"joined_projects": project_id},
-                {"applied_projects": project_id}
+                {"owned_projects": ObjectId(project_id)},
+                {"joined_projects": ObjectId(project_id)},
+                {"applied_projects": ObjectId(project_id)}
             ]
         },
         {
             "$pull": {
-                "owned_projects": project_id,
-                "joined_projects": project_id,
-                "applied_projects": project_id
+                "owned_projects": ObjectId(project_id),
+                "joined_projects": ObjectId(project_id),
+                "applied_projects": ObjectId(project_id)
             }
         }
     )
