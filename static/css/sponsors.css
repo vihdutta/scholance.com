@@ -1,10 +1,15 @@
+@media only screen and (max-width: 1200px) {
+    .sponsor-image {
+      height: calc(50%)  !important;
+    }
+  }
+
 .sponsors-container {
     display: flex;
     flex-wrap: wrap; /* Allow items to wrap to new rows */
     align-items: center;
     justify-content: space-around;
     height: 175px; /* Set your desired fixed height */
-    padding: 25px 0 25px;
     overflow: hidden; /* Hide overflow if images exceed container height */
     margin: 0 25%;
 }
@@ -14,6 +19,7 @@
     max-height: 100%; /* Resize images to fit container height */
     object-fit: contain; /* Scale images while maintaining aspect ratio */
     margin: 0 10px; /* Add margin between images */
-    width: calc(25% - 20px); /* Adjust width for 4 images in a row */
+    padding: 5px;
+    height: calc(80%); /* Adjust width for 4 images in a row */
     /* Add media queries as needed to adjust width for smaller screens */
 }

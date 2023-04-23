@@ -12,44 +12,49 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Scholance</title>
 </head>
 
 <body>
     <section class="standard-bg">
-        <header class="index-header">
-            <nav>
-                <ul class="nav_links mb-0">
+        {% block content %} {% with messages =
+            get_flashed_messages(with_categories=true) %} {% for category, message in
+            messages %}
+            <div class="{{ category }}">{{ message }}</div>
+            {% endfor %} {% endwith %}
+        <header>
+            <nav class="text-center">
+                <ul class="nav_links mb-0 p-0">
+                    <li><a href="/about">About Scholance</a></li>
+                </ul>
+                <ul class="nav_links mb-0 p-0">
                     <li><a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a></li>
                 </ul>
-                <ul class="nav_links mb-0">
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/projects">Projects</a></li>
+                <ul class="nav_links mb-0 p-0">
                     <li><a href="/organizations">Posting for Organizations</a></li>
-                </ul>
-                <ul class="nav_links mb-0">
-                    <li><a class="cta" href="/login">Login</a></li>
-                    <li><a class="cta" href="/signup"><button>Get started</button></a></li>
                 </ul>
             </nav>
         </header>
 
-        <div class="spacer"></div>
-
-        <div class="wrapper front-text-padding pb-5">
-            <h1>Earn community service hours online.</h1>
-            <!-- Experience for the unexperienced. Help your community virtually. Earn community service hours online.-->
-            <h3><span class="subheader-join-button"><a src="swag.com">Join</a></span> the world's most efficient service platform for students.</h3>
-            <!-- helping problem solvers get real-world experience. -->
-            <br>
-            <form class="pb-5" method="post">
-                <div class="search-input" id="search-input">
-                    <input type="text" name="search" placeholder="Find an opportunity">
-                    <!-- Find a local, online opportunity-->
-                    <button type="submit" value="submit" class="icon"><i class="bi bi-search"></i></button>
-                    <div class="autocom-box" id="autocom-box"></div>
-                </div>
-            </form>
+        <div class="container wrapper front-text-padding pb-5">
+            <div class="margin-head-elements">
+                <h1 class="h1-smaller">Earn community service hours online.</h1>
+                <!-- Experience for the unexperienced. Help your community virtually. Earn community service hours online.-->
+                <h3>Get service hours and experience- all from your own home.</h3>
+                <!-- helping problem solvers get real-world experience. -->
+                <br>
+                <form class="pb-5" method="GET" id="request-early-access">
+                    <div class="form-group">
+                        <div class="input-group">
+                          <input type="email" class="form-control" id="main-email" name="main-email" placeholder="Enter email address" required>
+                          <div class="input-group-append">
+                            <button class="shadow-none" type="submit" >Request Access</button>
+                          </div>
+                        </div>
+                      </div>
+                </form>
+            </div>
         </div>
     </section>
 
@@ -63,17 +68,21 @@
     <section class="bg-color">
         <div class="container p-5">
             <div class="col-sm-12 text-center">
-                <h2 class="pb-5">Whether you're completing service hours for school, or to gain experience, you've come to the right place.</h2>
+                <h2 class="pb-5 h2-smaller">Whether you're completing service hours for school, or to gain experience, you've come to the right place.</h2>
                 <h5>Scholance is a platform that allows students of all backgrounds to complete community service hours online.
                     With a focus on skill development, Scholance empowers students to take their communication, leadership,
-                    and computer science skills to infinity. <br><br> Plus, it's totally free to sign up! Showcasing
+                    and computer science skills to infinity. <br><br> Plus, it'll always be free! Showcasing
                     your stellar performance on Scholance could even help boost your college essays, project
                     portfolios, and resumes- how cool is that?</h5>
             </div>
         </div>
 
-        <div class="container">
-            <div class="col-sm-12 text-center  pb-5">
+        <div class="highlight-color text-center p-5">
+            <h3 id="quotes" class="mb-0" style="opacity: 1;">'I'm signing up for the release right now' - J.D.</h3>
+        </div>
+
+        <div class="container mt-5">
+            <div class="col-sm-12 text-center pb-5">
                 <h3>Open Environment</h3>
                 <h5>We believe developers of all backgrounds deserve an opportunity to grow. Here at Scholance, you'll be accepted to projects indiscriminately.</h5>
             </div>
@@ -95,7 +104,7 @@
 
             <div class="col-sm-12 text-center  pb-5">
                 <h3 class="pb-1">Start earning community service hours today. Join now.</h3>
-                <li class="list-unstyled"><a class="cta" href="/signup"><button>Get started</button></a></li>
+                <li class="list-unstyled"><a class="cta" id="scroll"><button>Get started</button></a></li>
             </div>
         </div>
     </section>
@@ -110,13 +119,28 @@
                     <h5 class="mb-0">
                         <button data-toggle="collapse" data-target="#faqCollapse1"
                             aria-expanded="false" aria-controls="faqCollapse1">
-                            <i width="50" height="50" class="bi bi-list">What is Scholance?</i>
+                            <i width="50" height="50" class="bi bi-list">When is Scholance being released?</i>
                         </button>
                     </h5>
                 </div>
                 <div id="faqCollapse1" class="collapse" aria-labelledby="faqHeading1" data-parent="#faqAccordion">
                     <div class="card-body text-center">
-                        Scholance is a platform designed for computer science students of all skill levels to solve real-world problems, develop their skills, and gain experience in the field.
+                        Scholance will be publically available by the end of 2023.
+                    </div>
+                </div>
+            </div>
+            <div class="pb-3">
+                <div id="faqHeading1" class="text-center">
+                    <h5 class="mb-0">
+                        <button data-toggle="collapse" data-target="#faqCollapse2"
+                            aria-expanded="false" aria-controls="faqCollapse2">
+                            <i width="50" height="50" class="bi bi-list">Who can use Scholance?</i>
+                        </button>
+                    </h5>
+                </div>
+                <div id="faqCollapse2" class="collapse" aria-labelledby="faqHeading2" data-parent="#faqAccordion">
+                    <div class="card-body text-center">
+                        Scholance is being designed with high school and middle school students in mind. However, anyone can use it.
                     </div>
                 </div>
             </div>
@@ -125,13 +149,43 @@
                     <h5 class="mb-0">
                         <button data-toggle="collapse" data-target="#faqCollapse3"
                             aria-expanded="false" aria-controls="faqCollapse3">
-                            <i width="50" height="50" class="bi bi-list">How many projects can I do at once?</i>
+                            <i width="50" height="50" class="bi bi-list">Who posts projects on Scholance?</i>
                         </button>
                     </h5>
                 </div>
                 <div id="faqCollapse3" class="collapse" aria-labelledby="faqHeading3" data-parent="#faqAccordion">
                     <div class="card-body text-center">
-                        There is no limit to how many projects you can work on at simultaneously. However, we recommend completing one at a time.
+                        The Scholance Team is prioritizing community based organization and nonprofit postings. In the future, students will be able to post too.
+                    </div>
+                </div>
+            </div>
+            <div class="pb-3">
+                <div id="faqHeading4" class="text-center">
+                    <h5 class="mb-0">
+                        <button data-toggle="collapse" data-target="#faqCollapse4"
+                            aria-expanded="false" aria-controls="faqCollapse4">
+                            <i width="50" height="50" class="bi bi-list">How long does it take to get started?</i>
+                        </button>
+                    </h5>
+                </div>
+                <div id="faqCollapse4" class="collapse" aria-labelledby="faqHeading4" data-parent="#faqAccordion">
+                    <div class="card-body text-center">
+                        When Scholance releases, you can start earning community service hours the second you sign up.
+                    </div>
+                </div>
+            </div>
+            <div class="pb-3">
+                <div id="faqHeading5" class="text-center">
+                    <h5 class="mb-0">
+                        <button data-toggle="collapse" data-target="#faqCollapse5"
+                            aria-expanded="false" aria-controls="faqCollapse5">
+                            <i width="50" height="50" class="bi bi-list">How do I verify my community service hours?</i>
+                        </button>
+                    </h5>
+                </div>
+                <div id="faqCollapse5" class="collapse" aria-labelledby="faqHeading5" data-parent="#faqAccordion">
+                    <div class="card-body text-center">
+                        After you complete a community service project, the project owner will verify the hours and send you a document with all the details.
                     </div>
                 </div>
             </div>
@@ -146,7 +200,7 @@
                 </div>
                 <div id="faqCollapse6" class="collapse" aria-labelledby="faqHeading6" data-parent="#faqAccordion">
                     <div class="card-body text-center">
-                        Glad you asked! Learn more about posting here.
+                        Glad you asked! Learn more about posting <a href="/organizations">here</a>.
                     </div>
                 </div>
             </div>
@@ -156,14 +210,14 @@
 <div class="container text-center pt-5 pb-5">
     <h3>Still have questions?</h2>
     <p>Leave it to one of our Scholance representatives!</p>
-    <form id="contactForm" method="post" action="#">
+    <form id="contactForm" method="POST" id="ask-a-question">
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" class="form-control" id="name" name="name" required>
         </div>
         <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+            <label for="question-email">Email</label>
+            <input type="email" class="form-control" id="question-email" name="question-email" required>
         </div>
         <div class="form-group">
             <label for="message">Message</label>
@@ -174,47 +228,35 @@
 </div>
 </section>
 
-    <footer>
-        <div class="container-sm text-center pt-5">
-            <!-- Logo and homepage link -->
-            <div class="row mt-3">
-                <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
-            </div>
-
-            <!-- Links to about, projects, and organizations/post section -->
-            <div class="row mt-3">
-                <h5>Quick Links</h5>
-                <ul class="list-unstyled">
-                    <li><a href="about.html" class="text-white">About</a></li>
-                    <li><a href="projects.html" class="text-white">Projects</a></li>
-                    <li><a href="organizations.html" class="text-white">organizations/Post</a></li>
-                </ul>
-            </div>
-
-            <!-- Terms and conditions section -->
-            <div class="row mt-3">
-                <h5>Terms &amp; Conditions</h5>
-                <ul class="list-unstyled">
-                    <li><a href="terms.html" class="text-white">Terms of Service</a></li>
-                    <li><a href="privacy.html" class="text-white">Privacy Policy</a></li>
-                </ul>
-            </div>
-
-            <!-- Copyright section -->
-            <hr>
-            <div class="row mt-3">
-                <p class="text-lg-right">&copy; 2023 Scholance. All rights reserved.</p>
-            </div>
-
+<footer>
+    <div class="container-sm text-center pt-5">
+        <!-- Logo and homepage link -->
+        <div class="row mt-3">
+            <a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a>
         </div>
-    </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!-- Links to about, projects, and organizations/post section -->
+        <div class="row mt-3">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+                <li><a href="/about" class="text-white">About</a></li>
+                <li><a href="/organizations" class="text-white">Posting for Organizations</a></li>
+            </ul>
+        </div>
+
+        <!-- Copyright section -->
+        <hr>
+        <div class="row mt-3">
+            <p class="text-lg-right">&copy; 2023 Scholance LLC. All rights reserved.</p>
+        </div>
 
     </div>
-    <script defer src="../static/javascript/suggestions.js"></script>
+</footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script defer src="../static/javascript/script.js"></script>
+    {% endblock %}
 </body>
 
 </html>

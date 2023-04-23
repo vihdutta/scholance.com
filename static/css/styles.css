@@ -10,6 +10,16 @@
     --color-light-background: rgb(245, 245, 245);
   }
 
+  @media only screen and (max-width: 768px) {
+    .h1-smaller {
+      font-size: 3em !important;
+    }
+
+    .h2-smaller {
+        font-size: 2em !important;
+    }
+  }
+
 * {
     font-family: "Inter Tight", cursive;
     box-sizing: border-box;
@@ -36,6 +46,15 @@ h4 {
     font-weight: 200 !important;
 }
 
+ul {
+    padding-left: none;
+}
+
+.margin-head-elements {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 .subscriptions {
     padding: 0 !important;
     list-style-type: none;
@@ -53,6 +72,7 @@ h4 {
     background-color: var(--color-text);
     color:white;
 }
+
 
 /* Set background color of dropdown section to white */
 #faqAccordion .card-body {
@@ -148,7 +168,7 @@ a {
 }
 
 .front-text-padding {
-    padding-top: 15vh;
+    padding-top: 12vh;
 }
 
 .wrapper {
@@ -209,6 +229,11 @@ a {
     background-color: var(--color-primary);
 }
 
+.form-control:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 0.1rem var(--color-primary) !important;
+} 
+
 .search-input .autocom-box {
     position: absolute;
     top: 100%;
@@ -220,7 +245,7 @@ a {
     z-index: 1;
   }
 
-  .search-input.active .autocom-box {
+    .search-input.active .autocom-box {
     display: block;
     pointer-events: auto;
   }

@@ -16,36 +16,62 @@
 </head>
 
 <body>
-        <header class="index-header">
-            <nav>
-                <ul class="nav_links mb-0">
-                    <li><a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a></li>
-                </ul>
-                <ul class="nav_links mb-0">
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/projects">Projects</a></li>
-                    <li><a href="/organizations">Posting for Organizations</a></li>
-                </ul>
-                <ul class="nav_links mb-0">
-                    <li><a class="cta" href="/login">Login</a></li>
-                    <li><a class="cta" href="/signup"><button>Get started</button></a></li>
-                </ul>
-            </nav>
-        </header>
+    {% block content %} {% with messages =
+        get_flashed_messages(with_categories=true) %} {% for category, message in
+        messages %}
+        <div class="{{ category }}">{{ message }}</div>
+        {% endfor %} {% endwith %}
+    <header class="index-header">
+        <nav class="text-center">
+            <ul class="nav_links mb-0 p-0">
+                <li><a href="/about">About Scholance</a></li>
+            </ul>
+            <ul class="nav_links mb-0 p-0">
+                <li><a href="/"><img src="../../static/images/logo.PNG" height="70px" alt="logo"></a></li>
+            </ul>
+            <ul class="nav_links mb-0 p-0">
+                <li><a href="/organizations">Posting for Organizations</a></li>
+            </ul>
+        </nav>
+    </header>
 
         <div class="spacer"></div>
 
         <div class="container-fluid standard-bg">
             <div class="container front-text-padding text-center pb-5">
-                <h1>Getting online volunteers has never been easy. Until now.</h1>
+                <h1 class="h1-smaller">Getting online volunteers has never been easy, until now.</h1>
                 <h3>Let Scholance make finding your virtual volunteers as simple as possible.</h3>
             </div>
         </div>
 
         <div class="container p-5 text-center">
-            <h2>Getting started is as simple as signing up.</h2>
-            <h5>Sign up, login, post, and you're done!</h5>
+            <h2 class="h2-smaller">Getting started is as simple as signing up.</h2>
+            <h5>Login, post, and you're done!</h5>
+            <hr>
+            <p>More details to come as we continue development! If you want a specific feature or want a question, reach out to us below!</p>
         </div>
+
+        <div class="highlight-color text-center">
+        <div class="container text-center pt-5 pb-5">
+            <h3>Still have questions?</h3>
+            <p>Leave it to one of our Scholance representatives!</p>
+            <form id="contactForm" method="POST" id="ask-a-question">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="question-email">Email</label>
+                    <input type="email" class="form-control" id="question-email" name="question-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                </div>
+                <a class="cta" href="/signup"><button class="mt-5" type="submit" >Send Message</button></a>
+            </form>
+        </div>
+    </div>
 
     <footer>
         <div class="container-sm text-center pt-5">
@@ -58,18 +84,8 @@
             <div class="row mt-3">
                 <h5>Quick Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="about.html" class="text-white">About</a></li>
-                    <li><a href="projects.html" class="text-white">Projects</a></li>
-                    <li><a href="organizations.html" class="text-white">organizations/Post</a></li>
-                </ul>
-            </div>
-
-            <!-- Terms and conditions section -->
-            <div class="row mt-3">
-                <h5>Terms &amp; Conditions</h5>
-                <ul class="list-unstyled">
-                    <li><a href="terms.html" class="text-white">Terms of Service</a></li>
-                    <li><a href="privacy.html" class="text-white">Privacy Policy</a></li>
+                    <li><a href="/about" class="text-white">About</a></li>
+                    <li><a href="/organizations" class="text-white">Posting for Organizations</a></li>
                 </ul>
             </div>
 
@@ -81,13 +97,13 @@
 
         </div>
     </footer>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    </div>
     <script defer src="../static/javascript/suggestions.js"></script>
+    {% endblock %}
 </body>
 
 </html>

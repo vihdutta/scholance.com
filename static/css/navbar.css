@@ -42,7 +42,7 @@ nav {
 }
 
 .nav_links li a:hover {
-    background-color: var(--color-light-background) !important;
+    text-decoration: underline;
 }
 
 .logo {
