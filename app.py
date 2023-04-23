@@ -85,4 +85,4 @@ def request_early_access(email):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=6969) #debug=True, port=6969
+    app.run(debug=False, host="0.0.0.0") #debug=True, port=6969
