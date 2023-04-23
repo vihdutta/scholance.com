@@ -1,14 +1,6 @@
 from flask import (Flask, render_template, request, flash,
-                   redirect, url_for)
-from pymongo import MongoClient
+                   redirect)
 import sib_api_v3_sdk
-import certifi
-
-# Mongo DB Setup
-cluster = MongoClient("mongodb+srv://scholance:3kxzhyifLA5kVeDk@cluster0.ovv1ops.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
-db = cluster["main"]
-users_db = db["users"]
-projects_db = db["projects"]
 
 # SendInBlue Setup
 sib_configuration = sib_api_v3_sdk.Configuration()
@@ -87,7 +79,7 @@ def try_change_hcps_to_standard(email):
             remove_email.emails = [email]
             sib_api_contacts_instance.remove_contact_from_list(3, remove_email)
 
-            flash("HCPS boi.", "info")
+            flash("Thank you for submitting! We'll respond shortly.", "info")
             return True
     except Exception:
         return False
