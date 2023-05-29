@@ -43,8 +43,7 @@ def send_question_email():
     if (honey_pot != ""):
         return
     # if they're in HCPS list add to normal
-    if try_change_hcps_to_standard(question_email):
-        return redirect(request.url)
+    try_change_hcps_to_standard(question_email)
     
     try:
         first_name = request.form.get('name').split(" ")[0]
@@ -66,7 +65,6 @@ def send_question_email():
     response = sib_api_contacts_instance.create_contact(create_contact)
     print(response)
     sib_api_transactional_instance.send_transac_email(send_smtp_email)
-    flash("Thank you! You'll receive an email shortly.", "info")
     return redirect(request.url)
     
 def try_change_hcps_to_standard(email):
