@@ -72,6 +72,11 @@ function requestEarlyAccess(email) {
 // Trigger the request early access request when the request early access form is submitted
 $("#request-early-access").on("submit", function(e) {
   e.preventDefault();
+  var extra = $(this).find("#extra").val();
+  if (extra !== "") {
+    console.log("Extra field is not empty. Ignoring early access request.");
+    return;
+  }
   var email = $(this).find("#main-email").val();
   $(this).find("#main-email").val("Thank you! We'll send access through your email soon!");
   requestEarlyAccess(email);

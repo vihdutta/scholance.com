@@ -4,7 +4,7 @@ import sib_api_v3_sdk
 
 # SendInBlue Setup
 sib_configuration = sib_api_v3_sdk.Configuration()
-sib_configuration.api_key['api-key'] = "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"
+sib_configuration.api_key['api-key'] = "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"
 sib_api_transactional_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(sib_configuration))
 sib_api_contacts_instance = sib_api_v3_sdk.ContactsApi(sib_api_v3_sdk.ApiClient(sib_configuration))
 sib_api_lists_instance = sib_api_v3_sdk.FilesApi(sib_api_v3_sdk.ApiClient(sib_configuration))
@@ -23,13 +23,13 @@ headers = {
 @app.route('/', methods=["GET", "POST"])
 def index():        
     if request.method == "POST":
-        send_contact_email()
+        send_question_email()
     return render_template("/index.html")
 
 @app.route('/organizations', methods=["GET", "POST"])
 def organizations():
     if request.method == "POST":
-        send_contact_email()
+        send_question_email()
     return render_template("/organizations.html")
 
 
@@ -37,8 +37,11 @@ def organizations():
 def about():
     return render_template("/about.html")
 
-def send_contact_email():
+def send_question_email():
     question_email = request.form.get('question-email')
+    honey_pot = request.form.get('extra')
+    if (honey_pot != ""):
+        return
     # if they're in HCPS list add to normal
     if try_change_hcps_to_standard(question_email):
         return redirect(request.url)
@@ -51,18 +54,19 @@ def send_contact_email():
         last_name = ""
     message = request.form.get('message')
 
-    create_contact = sib_api_v3_sdk.CreateContact(email=question_email, list_ids=[2], update_enabled=True, attributes={'FIRSTNAME': first_name, 'LASTNAME': last_name})
+    create_contact = sib_api_v3_sdk.CreateContact(email=question_email, list_ids=[2], update_enabled=True, attributes={'FIRSTNAME': first_name, 'LASTNAME': last_name, "MESSAGE":message})
 
     template_id = 2
     sender = {"name": "Scholance", "email": "info@scholance.com"}
+    reply_to = {"name": "Scholance", "email": "info@scholance.com"}
     to = [{"email": question_email, "name": first_name + last_name}]
-    params = {'FIRSTNAME': first_name, 'LASTNAME': last_name, "EMAIL": question_email}
-    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, template_id=template_id, sender=sender, headers=headers, params=params)
+    params = {'FIRSTNAME': first_name, 'LASTNAME': last_name, "EMAIL": question_email, "MESSAGE":message}
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, template_id=template_id, reply_to=reply_to, sender=sender, headers=headers, params=params)
 
     response = sib_api_contacts_instance.create_contact(create_contact)
     print(response)
     sib_api_transactional_instance.send_transac_email(send_smtp_email)
-    flash("Thank you for submitting! We'll respond shortly.", "info")
+    flash("Thank you! You'll receive an email shortly.", "info")
     return redirect(request.url)
     
 def try_change_hcps_to_standard(email):
@@ -79,7 +83,7 @@ def try_change_hcps_to_standard(email):
             remove_email.emails = [email]
             sib_api_contacts_instance.remove_contact_from_list(3, remove_email)
 
-            flash("Thank you for submitting! We'll respond shortly.", "info")
+            flash("Thank you! You'll receive an email shortly.", "info")
             return True
     except Exception:
         return False
@@ -97,12 +101,10 @@ def request_early_access(email):
     params = {"EMAIL": email}
     send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, template_id=template_id, sender=sender, headers=headers, params=params)
 
-    repsonse = sib_api_contacts_instance.create_contact(create_contact)
-    print(repsonse)
+    response = sib_api_contacts_instance.create_contact(create_contact)
+    print(response)
     sib_api_transactional_instance.send_transac_email(send_smtp_email)
     return "REQUEST SUCCESSFUL"
-
-
 
 if __name__ == '__main__':
     app.run(debug=False, port=6969) #debug=True, port=6969
