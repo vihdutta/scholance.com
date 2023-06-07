@@ -51,6 +51,9 @@ def send_question_email():
     except Exception:
         first_name = request.form.get('name')
         last_name = ""
+    
+    if first_name == "RobertKax": # do api call to server for list of names instead of this for quick editing
+        return
     message = request.form.get('message')
 
     create_contact = sib_api_v3_sdk.CreateContact(email=question_email, list_ids=[2], update_enabled=True, attributes={'FIRSTNAME': first_name, 'LASTNAME': last_name, "MESSAGE":message})
@@ -59,12 +62,14 @@ def send_question_email():
     sender = {"name": "Scholance", "email": "info@scholance.com"}
     reply_to = {"name": "Scholance", "email": "info@scholance.com"}
     to = [{"email": question_email, "name": first_name + last_name}]
+    cc = [{"email": "info.scholance@gmail.com", "name": "Scholance"}]
     params = {'FIRSTNAME': first_name, 'LASTNAME': last_name, "EMAIL": question_email, "MESSAGE":message}
-    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, template_id=template_id, reply_to=reply_to, sender=sender, headers=headers, params=params)
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, cc=cc, template_id=template_id, reply_to=reply_to, sender=sender, headers=headers, params=params)
 
     response = sib_api_contacts_instance.create_contact(create_contact)
     print(response)
     sib_api_transactional_instance.send_transac_email(send_smtp_email)
+    flash("Thank you! You'll receive an email shortly.", "info")
     return redirect(request.url)
     
 def try_change_hcps_to_standard(email):
